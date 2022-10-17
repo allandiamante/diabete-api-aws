@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'myapi-env-1.eba-m8iacfv8.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = [ 'myapi-env-1.eba-xtdwjz2c.sa-east-1.elasticbeanstalk.com']
 
 
 # Application definition
@@ -184,10 +184,10 @@ AUTH_USER_MODEL = 'userapp.User'
 ACCOUNT_EMAIL_REQUIRED = False
 
 #gmail_send/settings.py
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'codes.environment@gmail.com'
-EMAIL_HOST_PASSWORD = 'emqcfqqghtgndxqq' 
+EMAIL_BACKEND = ''
+EMAIL_HOST = ''
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = '' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'default from email'
