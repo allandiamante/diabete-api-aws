@@ -24,7 +24,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = [ 'myapi-env-1.eba-xtdwjz2c.sa-east-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = [    
+    '127.0.0.1',
+    'localhost',
+    '.elasticbeanstalk.com',
+    'myapi-env-1.eba-xtdwjz2c.sa-east-1.elasticbeanstalk.com']
 
 
 # Application definition
