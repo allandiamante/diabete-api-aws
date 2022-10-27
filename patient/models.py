@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+
+
 class Patient(models.Model):
   subject_name = models.CharField(max_length=200)
   age = models.PositiveSmallIntegerField(default=0) #Values from 0 to 32767
@@ -47,4 +49,26 @@ class Patient(models.Model):
 
 
   def __str__(self):
-    return self.patient_initials
+    return self.initials
+
+
+
+class Medicines(models.Model):
+  insulin = models.BooleanField(default=False)
+  ace_arb = models.BooleanField(default=False)
+  sinvas_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  atorvas_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  rosuvas_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  losartan_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  enalapril_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  quetiapina_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  venlafaxina_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  omeprazol_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  ranitidina_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  carbamazpn_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  anticoncepcional = models.BooleanField(default=False)
+  ass_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  lt4_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  mtf_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  patient = models.OneToOneField(
+        Patient, on_delete=models.CASCADE)
