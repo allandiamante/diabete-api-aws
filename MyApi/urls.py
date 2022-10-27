@@ -32,5 +32,6 @@ urlpatterns = [
     path('posts/', include('posts.api.urls')),
     path('school/', include('school.api.urls')),
     path('racing/', include('racing.urls')),
-    path('weather/', include('weather.urls'))
+    path('weather/', include('weather.urls')),
+    path('patient/', include('patient.api.urls'))
 ]

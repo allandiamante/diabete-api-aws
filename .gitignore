@@ -2,6 +2,7 @@
 *.sqlite
 *.pyc
 
+Lib
 eb-virt
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

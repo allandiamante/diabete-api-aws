@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'school',
     'racing',
     'weather.apps.WeatherConfig',
+    'patient',
 ]
 
 SITE_ID = 1
