@@ -24,6 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
+
+
+
 ALLOWED_HOSTS = [    
     '127.0.0.1',
     'localhost',
@@ -91,19 +94,34 @@ TEMPLATES = [
 WSGI_APPLICATION = 'MyApi.wsgi.application'
 
 
-# Database
+# Database Cloud
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+
+# Amazon - RDS
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'MYAPI',
+#         'USER': 'admin',
+#         'PASSWORD': '12345678',
+#         'HOST': 'awsdj2.cr4spxshp2li.sa-east-1.rds.amazonaws.com',
+#         'PORT': 3306
+#     }
+# }
+
+# Database Local
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'MYAPI',
-        'USER': 'admin',
-        'PASSWORD': '12345678',
-        'HOST': 'awsdj2.cr4spxshp2li.sa-east-1.rds.amazonaws.com',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
         'PORT': 3306
     }
 }
+
 
 #default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 

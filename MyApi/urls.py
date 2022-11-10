@@ -34,6 +34,6 @@ urlpatterns = [
     path('school/', include('school.api.urls')),
     path('racing/', include('racing.urls')),
     path('weather/', include('weather.urls')),
-    path('patient/', include('patient.api.urls')),
+    path('patients/', include('patient.api.urls')),
 
 ]
