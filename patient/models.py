@@ -70,7 +70,7 @@ class Patient(models.Model):
   bsa = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
   smoker = models.BooleanField(default=False)
   alcohol = models.BooleanField(default=False)
-  atividade_fisica = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) #perguntar
+  physical_activity = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) #perguntar
   dm = models.BooleanField(default=False)#habilitar o type_dm
   type_dm = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(2)],default=0)
   age_dm_diagnosis = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
@@ -97,6 +97,7 @@ class Patient(models.Model):
 
   def __str__(self):
     return self.initials
+
 
 
 
