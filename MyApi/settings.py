@@ -51,13 +51,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth.registration',
-    'firstApp',
-    'cars',
-    'posts',
     'userapp',
-    'school',
-    'racing',
-    'weather.apps.WeatherConfig',
     'patient',
 ]
 

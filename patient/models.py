@@ -52,20 +52,18 @@ STATES_CHOICES = (
 )
 
 class Patient(models.Model):
-  collected_data = models.DateTimeField(auto_now_add=True) #será uma classe futuramente, não ha necessidade
+  collected_data = models.DateTimeField(default=timezone.now) 
   subject_name = models.CharField(max_length=200)
   age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)],default=0) #Values from 0 to 32767
   initials = models.CharField(max_length=10) #gerar
   gender = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(2)], choices=GENDER_CHOICES) # (de 1 = Male ; 2 = Female)
   weight = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(500.0)],default=0)
   height = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)],default=0)
-
   ### ALTERAÇÕES
   phone = models.CharField(max_length=15) #numero
   #alterado address por duas colunas (estado e cidade)
   state = models.CharField(max_length=2, choices = STATES_CHOICES)
   city = models.CharField(max_length=100)
-
   bmi = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(150.0)], default=None)
   bsa = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
   smoker = models.BooleanField(default=False)
@@ -93,7 +91,6 @@ class Patient(models.Model):
   can_status = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) #valore possiveis
   brs_status = models.CharField(max_length=50) # coluna vazia
   observations = models.TextField(max_length=1000)
-
 
   def __str__(self):
     return self.initials

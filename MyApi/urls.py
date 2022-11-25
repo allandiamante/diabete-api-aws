@@ -26,14 +26,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('first-app/', include('firstApp.api.urls')),
-    path('cars-app/', include('cars.api.urls')),
-    path('posts/', include('posts.api.urls')),
-    path('school/', include('school.api.urls')),
-    path('racing/', include('racing.urls')),
-    path('weather/', include('weather.urls')),
     path('patients/', include('patient.api.urls')),
 
 ]
