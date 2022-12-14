@@ -54,22 +54,20 @@ STATES_CHOICES = (
 class Patient(models.Model):
   collected_data = models.DateTimeField(default=timezone.now) 
   subject_name = models.CharField(max_length=200)
-  age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)],default=0) #Values from 0 to 32767
-  initials = models.CharField(max_length=10) #gerar
-  gender = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(2)], choices=GENDER_CHOICES) # (de 1 = Male ; 2 = Female)
+  age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)],default=0)
+  initials = models.CharField(max_length=10) 
+  gender = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(2)], choices=GENDER_CHOICES) 
   weight = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(500.0)],default=0)
   height = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)],default=0)
-  ### ALTERAÇÕES
-  phone = models.CharField(max_length=15) #numero
-  #alterado address por duas colunas (estado e cidade)
+  phone = models.CharField(max_length=15)
   state = models.CharField(max_length=2, choices = STATES_CHOICES)
   city = models.CharField(max_length=100)
   bmi = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(150.0)], default=None)
   bsa = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
   smoker = models.BooleanField(default=False)
   alcohol = models.BooleanField(default=False)
-  physical_activity = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) #perguntar
-  dm = models.BooleanField(default=False)#habilitar o type_dm
+  physical_activity = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) 
+  dm = models.BooleanField(default=False)
   type_dm = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(2)],default=0)
   age_dm_diagnosis = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
   dm_duration = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
@@ -87,9 +85,9 @@ class Patient(models.Model):
   rr_db = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
   rr_valsalva = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
   rr_standing = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
-  obrienc_cs = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) #valore possiveis
-  can_status = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) #valore possiveis
-  brs_status = models.CharField(max_length=50) # coluna vazia
+  obrienc_cs = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0)
+  can_status = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0)
+  brs_status = models.CharField(max_length=50)
   observations = models.TextField(max_length=1000)
 
   def __str__(self):
@@ -97,10 +95,10 @@ class Patient(models.Model):
 
 
 
-
+#
 class Medicines(models.Model):
   collected_data = models.DateTimeField(default=timezone.now)
-  patient_medicines = models.OneToOneField(
+  patient_medicines = models.ForeignKey(
         Patient, on_delete=models.CASCADE)
   insulin = models.BooleanField(default=False)
   ace_arb = models.BooleanField(default=False)
@@ -121,6 +119,7 @@ class Medicines(models.Model):
   
 def _str_(self):
   return self.patient_medicines.initials+": " + str(self.id)
+
 
 class ExamsResults(models.Model):
   collected_data = models.DateTimeField(default=timezone.now)
@@ -175,6 +174,68 @@ class CollectData(models.Model):
   def __str__(self):
     return self.patient_data.initials+": " + str(self.id)
 
+class HRVTime(models.Model):
+  collected_data = models.DateTimeField(default=timezone.now) #será uma classe futuramente, não ha necessidade
+  collectdata_time = models.OneToOneField(
+        CollectData, on_delete=models.CASCADE)
+  nn_mean = models.FloatField(null=True)
+  nn_median = models.FloatField(null=True)
+  nn_mode = models.FloatField(null=True)
+  nn_variance = models.FloatField(null=True)
+  nn_skew = models.FloatField(null=True)
+  nn_kurt = models.FloatField(null=True)
+  nn_iqr = models.FloatField(null=True)
+  sd_nn = models.FloatField(null=True)
+  cv = models.FloatField(null=True)
+  rmssd = models.FloatField(null=True)
+  sdsd = models.FloatField(null=True)
+  nn50 = models.FloatField(null=True)
+  pnn50_pr = models.FloatField(null=True)
+  nn20 = models.FloatField(null=True)
+  pnn20 = models.FloatField(null=True)
+  pnn20_pr = models.FloatField(null=True)
+  hr_change = models.FloatField(null=True)
+  gti = models.FloatField(null=True)
+  tinn = models.FloatField(null=True)
+  si = models.FloatField(null=True)
+
+  def __str__(self):
+    return Patient.objects.get(pk=self.collectdata_time.id).initials + ": " + str(self.id)
+
+class HRVFreq(models.Model):
+  collected_data = models.DateTimeField(default=timezone.now) #será uma classe futuramente, não ha necessidade
+  collectdata_freq = models.OneToOneField(
+        CollectData, on_delete=models.CASCADE)
+  ulf_lomb_ms2 = models.FloatField(null=True)
+  vlf_lomb_ms2 = models.FloatField(null=True)
+  lf_lomb_ms2 = models.FloatField(null=True)
+  hf_lomb_ms2 = models.FloatField(null=True)
+  ulf_lomb_log = models.FloatField(null=True)
+  vlf_lomb_log = models.FloatField(null=True)
+  lf_lomb_log = models.FloatField(null=True)
+  hf_lomb_log = models.FloatField(null=True)
+  ttlpwr_lomb_ms2 = models.FloatField(null=True)
+  lf_hf_lomb = models.FloatField(null=True)
+  power_vlf_lomb = models.FloatField(null=True)
+  power_lf_lomb = models.FloatField(null=True)
+  power_hf_lomb = models.FloatField(null=True)
+  lf_nu_lomb = models.FloatField(null=True)
+  hf_nu_lomb = models.FloatField(null=True)
+  ulf_welch = models.FloatField(null=True)
+  vlf_welch = models.FloatField(null=True)
+  lf_welch = models.FloatField(null=True)
+  hf_welch = models.FloatField(null=True)
+  ttlpwr_welch = models.FloatField(null=True)
+  lfhf_welch = models.FloatField(null=True)
+  power_vlf_welch = models.FloatField(null=True)
+  power_lf_welch = models.FloatField(null=True)
+  power_hf_welch = models.FloatField(null=True)
+  lf_nu_welch = models.FloatField(null=True)
+  hf_nu_welch = models.FloatField(null=True)
+
+  def __str__(self):
+    return Patient.objects.get(pk=self.collectdata_freq.id).initials + ": " + str(self.id)
+#
 class Conditions(models.Model):
   collected_data = models.DateTimeField(default=timezone.now)
   patient_conditions = models.OneToOneField(

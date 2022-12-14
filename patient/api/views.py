@@ -1,8 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from patient.models import Patient, Medicines
-from .serializer import PatientsSerializer, PrototipePatientsSerializer, MedicinesSerializer
-
+from patient.models import Patient, Medicines, CollectData, ExamsResults, Conditions, HRVTime, HRVFreq
+from .serializer import PatientsSerializer, PrototipePatientsSerializer, MedicinesSerializer, ExamsResultsSerializer, CollectDataSerializer, ConditionsSerializer, HRVFreqSerializer, HRVTimeSerializer
 
 class PatientsViewSet(viewsets.ModelViewSet):
     serializer_class = PatientsSerializer
@@ -17,7 +16,7 @@ class PatientsViewSet(viewsets.ModelViewSet):
             subject_name=data["subject_name"], age=data['age'], initials=data["initials"],
              gender=data["gender"], weight=data["weight"], height=data["height"], phone=data["phone"],
               state=data["state"], city=data["city"], bmi=data["bmi"], bsa=data["bsa"], smoker=data["smoker"],
-               alcohol=data["alcohol"], atividade_fisica=data["atividade_fisica"], dm=data["dm"], type_dm=data["type_dm"],
+               alcohol=data["alcohol"], physical_activity=data["physical_activity"], dm=data["dm"], type_dm=data["type_dm"],
                 age_dm_diagnosis=data["age_dm_diagnosis"], dm_duration=data["dm_duration"], hipo_mes=data["hipo_mes"],
                  internacao_dm=data["internacao_dm"], sbp_repous=data["sbp_repous"], dbp_repous=data["dbp_repous"],
                   sbp_empe=data["sbp_empe"], dbp_empe=data["dbp_empe"], sbp_change=data["sbp_change"],
@@ -30,6 +29,8 @@ class PatientsViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+
+
 class MedicinesViewSet(viewsets.ModelViewSet):
     serializer_class = MedicinesSerializer
 
@@ -39,31 +40,142 @@ class MedicinesViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        print(Patient.objects.get('RTF'))
         new_medicines = Medicines.objects.create(
-            #car_plan=CarPlan.objects.get(plan_name=car_data["car_plan"])
-            patient_medicines=Patient.objects.get(int(data["patient_medicines"])),
+            collected_data=data["collected_data"],
+            patient_medicines=Patient.objects.get(pk=int(data["patient_medicines"])),
              insulin=data['insulin'], ace_arb=data["ace_arb"], sinvas_mg=data["sinvas_mg"], atorvas_mg=data["atorvas_mg"],
               rosuvas_mg=data["rosuvas_mg"], losartan_mg=data["losartan_mg"], enalapril_mg=data["enalapril_mg"],
                quetiapina_mg=data["quetiapina_mg"], venlafaxina_mg=data["venlafaxina_mg"], omeprazol_mg=data["omeprazol_mg"],
                 ranitidina_mg=data["ranitidina_mg"], carbamazpn_mg=data["carbamazpn_mg"], anticoncepcional=data["anticoncepcional"],
                  ass_mg=data["ass_mg"], lt4_mg=data["lt4_mg"], mtf_mg=data["mtf_mg"])
 
-        new_medicines.save()
-     
-
+        new_medicines.save() 
         serializer = MedicinesSerializer(new_medicines)
-
         return Response(serializer.data)
 
 
 
+class ExamsResultsViewSet(viewsets.ModelViewSet):
+    serializer_class = ExamsResultsSerializer
+
+    def get_queryset(self):
+        examsresults = ExamsResults.objects.all()
+        return examsresults
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        new_examsresults = ExamsResults.objects.create(
+            collected_data=data["collected_data"],
+            patient_exams=Patient.objects.get(pk=int(data["patient_exams"])),
+             hba1c_percent=data['hba1c_percent'], hba1c_mmol_mol=data["hba1c_mmol_mol"], hb_g_dl=data["hb_g_dl"], glicemia_mg_dl=data["glicemia_mg_dl"],
+              glicemia_mmol_l=data["glicemia_mmol_l"], urine_albumina_mg_24h=data["urine_albumina_mg_24h"], microAlb=data["microAlb"],
+               creatina_mg_dl=data["creatina_mg_dl"], creatina_umol_l=data["creatina_umol_l"], acr_alb_creat=data["acr_alb_creat"],
+                rpc_prot_creat=data["rpc_prot_creat"], clear_creatinina=data["clear_creatinina"], ct_mg_dl=data["ct_mg_dl"],
+                 ct_mmol_l=data["ct_mmol_l"], hdl_mg_dl=data["hdl_mg_dl"], ldl_mg_dl=data["ldl_mg_dl"],
+                 vitb12=data["vitb12"], vitd=data["vitd"], tsh=data["tsh"],
+                 tg_mg_dl=data["tg_mg_dl"], tg_mmol_l=data["tg_mmol_l"], na=data["na"],
+                 basek=data["basek"], ureia=data["ureia"])
+
+        new_examsresults.save() 
+        serializer = ExamsResultsSerializer(new_examsresults)
+        return Response(serializer.data)
 
 
+class CollectDataViewSet(viewsets.ModelViewSet):
+    serializer_class = CollectDataSerializer
+
+    def get_queryset(self):
+        examsresults = CollectData.objects.all()
+        return examsresults
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        new_collectdata = CollectData.objects.create(
+            collected_data=data["collected_data"],
+            patient_data=Patient.objects.get(pk=int(data["patient_data"])),
+             study=data['study'], ecg=data["ecg"], ppg=data["ppg"], abp=data["abp"],
+              abspathrecord_times=data["abspathrecord_times"], sampling_freq_hz=data["sampling_freq_hz"], device=data["device"],
+               ecg_processing_status=data["ecg_processing_status"], ppg_processing_status=data["ppg_processing_status"], brs_processing_status=data["brs_processing_status"],
+                observations=data["observations"])
+
+        new_collectdata.save() 
+        serializer = CollectDataSerializer(new_collectdata)
+        return Response(serializer.data)
+
+class HRVTimeViewSet(viewsets.ModelViewSet):
+    serializer_class = HRVTimeSerializer
+
+    def get_queryset(self):
+        examsresults = HRVTime.objects.all()
+        return examsresults
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        new_hrvtime = HRVTime.objects.create(
+            collected_data=data["collected_data"],
+            collectdata_time=CollectData.objects.get(pk=int(data["collectdata_time"])),
+             nn_mean=data['nn_mean'], nn_median=data["nn_median"], nn_mode=data["nn_mode"], nn_variance=data["nn_variance"],
+              nn_skew=data["nn_skew"], nn_kurt=data["nn_kurt"], nn_iqr=data["nn_iqr"],
+               sd_nn=data["sd_nn"], cv=data["cv"], rmssd=data["rmssd"],
+                sdsd=data["sdsd"],nn50=data["nn50"], pnn50_pr=data["pnn50_pr"], nn20=data["nn20"], pnn20=data["pnn20"],
+                pnn20_pr=data["pnn20_pr"], hr_change=data["hr_change"], gti=data["gti"],
+                tinn=data["tinn"], si=data["si"])
+
+        new_hrvtime.save() 
+        serializer = HRVTimeSerializer(new_hrvtime)
+        return Response(serializer.data)
+
+class HRVFreqViewSet(viewsets.ModelViewSet):
+    serializer_class = HRVFreqSerializer
+
+    def get_queryset(self):
+        examsresults = HRVFreq.objects.all()
+        return examsresults
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        new_hrvfreq = HRVFreq.objects.create(
+            collected_data=data["collected_data"],
+            collectdata_freq=CollectData.objects.get(pk=int(data["collectdata_freq"])),
+             ulf_lomb_ms2=data['ulf_lomb_ms2'], vlf_lomb_ms2=data["vlf_lomb_ms2"], lf_lomb_ms2=data["lf_lomb_ms2"], 
+              hf_lomb_ms2=data["hf_lomb_ms2"], ulf_lomb_log=data["ulf_lomb_log"],
+               vlf_lomb_log=data["vlf_lomb_log"],lf_lomb_log=data["lf_lomb_log"], 
+                hf_lomb_log=data["hf_lomb_log"], ttlpwr_lomb_ms2=data["ttlpwr_lomb_ms2"],
+                 lf_hf_lomb=data["lf_hf_lomb"],                 
+                 power_vlf_lomb=data['power_vlf_lomb'], power_lf_lomb=data["power_lf_lomb"], power_hf_lomb=data["power_hf_lomb"], 
+                  lf_nu_lomb=data["lf_nu_lomb"], hf_nu_lomb=data["hf_nu_lomb"],
+                  ulf_welch=data["ulf_welch"],vlf_welch=data["vlf_welch"], 
+                  lf_welch=data["lf_welch"], hf_welch=data["hf_welch"],
+                    ttlpwr_welch=data["ttlpwr_welch"],                 
+                      lfhf_welch=data['lfhf_welch'], power_vlf_welch=data["power_vlf_welch"], power_lf_welch=data["power_lf_welch"], 
+                      power_hf_welch=data["power_hf_welch"], lf_nu_welch=data["lf_nu_welch"],
+                      hf_nu_welch=data["hf_nu_welch"])
+
+        new_hrvfreq.save() 
+        serializer = HRVFreqSerializer(new_hrvfreq)
+        return Response(serializer.data)
 
 
+class ConditionsViewSet(viewsets.ModelViewSet):
+    serializer_class = ConditionsSerializer
 
+    def get_queryset(self):
+        conditions = Conditions.objects.all()
+        return conditions
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        new_conditions = Conditions.objects.create(
+            collected_data=data["collected_data"],
+            patient_conditions=Patient.objects.get(pk=int(data["patient_conditions"])),
+             drge=data['drge'], vitiligo=data["vitiligo"], doenca_celiaca=data["doenca_celiaca"],
+              doenca_pulmonar=data["doenca_pulmonar"], ace_arb=data["ace_arb"], tireoide=data["tireoide"],
+               retinopathy=data["retinopathy"], nephropathy=data["nephropathy"], peripheral_neuropathy=data["peripheral_neuropathy"],
+                pn_symptoms=data["pn_symptoms"], pn_signs=data["pn_signs"])
+
+        new_conditions.save() 
+        serializer = ConditionsSerializer(new_conditions)
+        return Response(serializer.data)
 
 
 
