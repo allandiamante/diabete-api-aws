@@ -119,7 +119,7 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
                sd_nn=data["sd_nn"], cv=data["cv"], rmssd=data["rmssd"],
                 sdsd=data["sdsd"],nn50=data["nn50"], pnn50_pr=data["pnn50_pr"], nn20=data["nn20"], pnn20=data["pnn20"],
                 pnn20_pr=data["pnn20_pr"], hr_change=data["hr_change"], gti=data["gti"],
-                tinn=data["tinn"], si=data["si"])
+                tinn=data["tinn"], si=data["si"], file_hrvtime=data["file_hrvtime"])
 
         new_hrvtime.save() 
         serializer = HRVTimeSerializer(new_hrvtime)
@@ -149,7 +149,7 @@ class HRVFreqViewSet(viewsets.ModelViewSet):
                     ttlpwr_welch=data["ttlpwr_welch"],                 
                       lfhf_welch=data['lfhf_welch'], power_vlf_welch=data["power_vlf_welch"], power_lf_welch=data["power_lf_welch"], 
                       power_hf_welch=data["power_hf_welch"], lf_nu_welch=data["lf_nu_welch"],
-                      hf_nu_welch=data["hf_nu_welch"])
+                      hf_nu_welch=data["hf_nu_welch"], file_hrvfreq=data["file_hrvfreq"])
 
         new_hrvfreq.save() 
         serializer = HRVFreqSerializer(new_hrvfreq)

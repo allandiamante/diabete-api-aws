@@ -62,15 +62,15 @@ class Patient(models.Model):
   phone = models.CharField(max_length=15)
   state = models.CharField(max_length=2, choices = STATES_CHOICES)
   city = models.CharField(max_length=100)
-  bmi = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(150.0)], default=None)
-  bsa = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
+  bmi = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(150.0)], default=None) #Variavel calculada
+  bsa = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0) #Variavel calculada
   smoker = models.BooleanField(default=False)
   alcohol = models.BooleanField(default=False)
   physical_activity = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0) 
-  dm = models.BooleanField(default=False)
-  type_dm = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(2)],default=0)
-  age_dm_diagnosis = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
-  dm_duration = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
+  dm = models.BooleanField(default=False) # habilitar a partir da relação Dm
+  type_dm = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(2)],default=0)# habilitar a partir da relação Dm
+  age_dm_diagnosis = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)# habilitar a partir da relação Dm
+  dm_duration = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)# habilitar a partir da relação Dm
   hipo_mes = models.SmallIntegerField(default=0)
   internacao_dm = models.BooleanField(default=False)
   sbp_repous = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
@@ -198,7 +198,7 @@ class HRVTime(models.Model):
   gti = models.FloatField(null=True)
   tinn = models.FloatField(null=True)
   si = models.FloatField(null=True)
-  file_hrvtime = models.FileField(null=True) 
+  file_hrvtime = models.FileField(null=True, blank=True) # limita apenas TXT
 
   def __str__(self):
     return Patient.objects.get(pk=self.collectdata_time.id).initials + ": " + str(self.id)
@@ -233,7 +233,7 @@ class HRVFreq(models.Model):
   power_hf_welch = models.FloatField(null=True)
   lf_nu_welch = models.FloatField(null=True)
   hf_nu_welch = models.FloatField(null=True)
-  file_hrvfreq = models.FileField(null=True)
+  file_hrvfreq = models.FileField(null=True) # limita apenas TXT
 
   def __str__(self):
     return Patient.objects.get(pk=self.collectdata_freq.id).initials + ": " + str(self.id)

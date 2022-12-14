@@ -6,6 +6,5 @@ admin.site.register(Conditions)
 admin.site.register(Medicines)
 admin.site.register(ExamsResults)
 admin.site.register(CollectData)
-
 admin.site.register(HRVTime)
 admin.site.register(HRVFreq)

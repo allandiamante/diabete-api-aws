@@ -68,7 +68,7 @@ class HRVTimeSerializer(serializers.ModelSerializer):
         'cv', 'rmssd', 'sdsd',
         'nn50', 'pnn50_pr', 'nn20', 'pnn20',
         'pnn20_pr', 'hr_change', 'gti',
-        'tinn', 'si']
+        'tinn', 'si', 'file_hrvtime']
 
 class HRVFreqSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,4 +80,4 @@ class HRVFreqSerializer(serializers.ModelSerializer):
         'power_lf_lomb', 'power_hf_lomb', 'lf_nu_lomb', 'hf_nu_lomb',
         'ulf_welch', 'vlf_welch', 'lf_welch',
         'hf_welch', 'ttlpwr_welch', 'lfhf_welch', 'power_vlf_welch',
-        'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch']
+        'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch', 'file_hrvfrq']
