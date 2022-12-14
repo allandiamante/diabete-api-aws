@@ -198,6 +198,7 @@ class HRVTime(models.Model):
   gti = models.FloatField(null=True)
   tinn = models.FloatField(null=True)
   si = models.FloatField(null=True)
+  file_hrvtime = models.FileField(null=True) 
 
   def __str__(self):
     return Patient.objects.get(pk=self.collectdata_time.id).initials + ": " + str(self.id)
@@ -232,6 +233,7 @@ class HRVFreq(models.Model):
   power_hf_welch = models.FloatField(null=True)
   lf_nu_welch = models.FloatField(null=True)
   hf_nu_welch = models.FloatField(null=True)
+  file_hrvfreq = models.FileField(null=True)
 
   def __str__(self):
     return Patient.objects.get(pk=self.collectdata_freq.id).initials + ": " + str(self.id)
