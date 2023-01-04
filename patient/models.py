@@ -4,8 +4,6 @@ from smart_selects.db_fields import ChainedForeignKey
 from django.utils import timezone
 
 
-#Trocar ideia, data coletada automatica ou não?
-
 GENDER_CHOICES = (
         ( 1, 'Male'),
         ( 2, 'Female'),
@@ -91,8 +89,7 @@ class Patient(models.Model):
   observations = models.TextField(max_length=1000)
 
   def __str__(self):
-    return self.initials
-
+    return "[Paciente Iniciais: " + self.initials + " | "  + "Paciente ID: " + str(self.id)+ "]"
 
 
 #
@@ -117,8 +114,8 @@ class Medicines(models.Model):
   lt4_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
   mtf_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
   
-def _str_(self):
-  return self.patient_medicines.initials+": " + str(self.id)
+  def __str__(self):
+    return "[Paciente ID: " + str(self.patient_medicines.id) + " | "  + "Medicamento ID: " +  str(self.id)+ "]"
 
 
 class ExamsResults(models.Model):
@@ -151,7 +148,7 @@ class ExamsResults(models.Model):
   ureia = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
 
   def __str__(self):
-    return self.patient_exams.initials+": " + str(self.id)
+    return "[Paciente ID: " + str(self.patient_exams.id) + " | "  + "Resultado Exame ID: " +str(self.id)+ "]"
 
 
 
@@ -172,7 +169,28 @@ class CollectData(models.Model):
   observations = models.TextField(max_length=1000)
 
   def __str__(self):
-    return self.patient_data.initials+": " + str(self.id)
+    return "[Paciente ID: " + str(self.patient_data.id) + " | "  + "Dados Coletado ID: " + str(self.id)+ "]"
+
+#
+class Conditions(models.Model):
+  collected_data = models.DateTimeField(default=timezone.now)
+  patient_conditions = models.OneToOneField(
+        Patient, on_delete=models.CASCADE)
+  drge = models.BooleanField(default=False)
+  vitiligo = models.BooleanField(default=False)
+  doenca_celiaca = models.BooleanField(default=False)
+  doenca_pulmonar = models.BooleanField(default=False)
+  ace_arb = models.BooleanField(default=False)
+  tireoide = models.BooleanField(default=False)
+  retinopathy = models.BooleanField(default=False)
+  nephropathy = models.BooleanField(default=False)
+  peripheral_neuropathy = models.BooleanField(default=False)
+  pn_symptoms = models.CharField(max_length=200)
+  pn_signs = models.CharField(max_length=200)
+
+  def __str__(self):
+    return "[Paciente ID: " + str(self.patient_conditions.id) + " | "  + "Condições ID: " + str(self.id)+ "]"
+
 
 class HRVTime(models.Model):
   collected_data = models.DateTimeField(default=timezone.now) #será uma classe futuramente, não ha necessidade
@@ -201,7 +219,7 @@ class HRVTime(models.Model):
   file_hrvtime = models.FileField(null=True, blank=True) # limita apenas TXT
 
   def __str__(self):
-    return Patient.objects.get(pk=self.collectdata_time.id).initials + ": " + str(self.id)
+    return "[Paciente ID: " + str(self.collectdata_time.patient_data.id) + " | " + "Dados Coletado ID: " + str(self.collectdata_time.id) + " | " + "HRV Time ID: " + str(self.id)+ "]"
 
 class HRVFreq(models.Model):
   collected_data = models.DateTimeField(default=timezone.now) #será uma classe futuramente, não ha necessidade
@@ -236,23 +254,4 @@ class HRVFreq(models.Model):
   file_hrvfreq = models.FileField(null=True) # limita apenas TXT
 
   def __str__(self):
-    return Patient.objects.get(pk=self.collectdata_freq.id).initials + ": " + str(self.id)
-#
-class Conditions(models.Model):
-  collected_data = models.DateTimeField(default=timezone.now)
-  patient_conditions = models.OneToOneField(
-        Patient, on_delete=models.CASCADE)
-  drge = models.BooleanField(default=False)
-  vitiligo = models.BooleanField(default=False)
-  doenca_celiaca = models.BooleanField(default=False)
-  doenca_pulmonar = models.BooleanField(default=False)
-  ace_arb = models.BooleanField(default=False)
-  tireoide = models.BooleanField(default=False)
-  retinopathy = models.BooleanField(default=False)
-  nephropathy = models.BooleanField(default=False)
-  peripheral_neuropathy = models.BooleanField(default=False)
-  pn_symptoms = models.CharField(max_length=200)
-  pn_signs = models.CharField(max_length=200)
-
-def __str__(self):
-    return self.patient_conditions.initials+": " + str(self.id)
+    return "[Paciente ID: " + str(self.collectdata_freq.patient_data.id) + " | " + "Dados Coletado ID: " + str(self.collectdata_freq.id) + " | " + "HRV Freq ID: " + str(self.id) + "]"
