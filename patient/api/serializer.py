@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from patient.models import Patient, Medicines, ExamsResults, CollectData, Conditions, HRVTime, HRVFreq
+from patient.models import Patient, Medicine, ExamsResult, CollectData, Condition, HRVTime, HRVFreq
 
 
 class PatientsSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class PrototipePatientsSerializer(serializers.ModelSerializer):
 
 class MedicinesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Medicines
+        model = Medicine
         fields = [ 'id', 'patient_medicines','insulin', 'ace_arb', 
         'sinvas_mg', 'atorvas_mg','rosuvas_mg', 'losartan_mg', 
         'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
@@ -32,7 +32,7 @@ class MedicinesSerializer(serializers.ModelSerializer):
 
 class ExamsResultsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ExamsResults
+        model = ExamsResult
         fields = [ 'id', 'patient_exams','hba1c_percent', 
         'hba1c_mmol_mol', 'hb_g_dl', 'glicemia_mg_dl',
         'glicemia_mmol_l', 'urine_albumina_mg_24h', 'microAlb',
@@ -53,7 +53,7 @@ class CollectDataSerializer(serializers.ModelSerializer):
 
 class ConditionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Conditions
+        model = Condition
         fields = [ 'id', 'patient_conditions','drge', 'vitiligo', 
         'doenca_celiaca', 'doenca_pulmonar','ace_arb', 'tireoide', 
         'retinopathy', 'nephropathy','peripheral_neuropathy', 'pn_symptoms',

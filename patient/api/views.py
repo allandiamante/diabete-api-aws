@@ -1,21 +1,52 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from patient.models import Patient, Medicines, CollectData, ExamsResults, Conditions, HRVTime, HRVFreq
+from patient.models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq
 from .serializer import PatientsSerializer, PrototipePatientsSerializer, MedicinesSerializer, ExamsResultsSerializer, CollectDataSerializer, ConditionsSerializer, HRVFreqSerializer, HRVTimeSerializer
+
+
+#TIRAR DUVIDA
+#O "height" DEVE SER INT OU FLOAT
+#Como IBM será uma variavel calculada, deve-se tirar do formulário? * Tratar erros 
+#calcular initials
+
+def ret_initials(subject_name):  
+    remover_palavras  = ['da', 'de', 'do' ]
+    lista_frase = subject_name.split()
+    result = [palavra for palavra in lista_frase if palavra.lower() not in remover_palavras]
+    retorno = ' '.join(result)
+    subject_name = retorno.split(' ')
+    initials = ''
+    for i in subject_name:
+        initials = initials + i[0].upper()
+    print(initials)
+    return initials
+
+def calc_bmi(weight, height):
+    return (weight / (height * height) ) 
+
+def calc_raiz_q(x):
+    return x ** (1/2)
+
+def calc_bsa(weight, height):
+    cm = 100
+    return calc_raiz_q((height * cm ) * weight / 3600)
 
 class PatientsViewSet(viewsets.ModelViewSet):
     serializer_class = PatientsSerializer
 
     def get_queryset(self):
         patients = Patient.objects.all()
-        return patients
+        return patients   
 
     def create(self, request, *args, **kwargs):
         data = request.data
+
         new_patient = Patient.objects.create(
-            subject_name=data["subject_name"], age=data['age'], initials=data["initials"],
+            subject_name=data["subject_name"], age=data['age'], initials=ret_initials(data["subject_name"]),
              gender=data["gender"], weight=data["weight"], height=data["height"], phone=data["phone"],
-              state=data["state"], city=data["city"], bmi=data["bmi"], bsa=data["bsa"], smoker=data["smoker"],
+              state=data["state"], city=data["city"],             
+              bmi=calc_bmi(data["weight"], data["height"]),              
+               bsa=calc_bsa(data["weight"], data["height"]), smoker=data["smoker"],
                alcohol=data["alcohol"], physical_activity=data["physical_activity"], dm=data["dm"], type_dm=data["type_dm"],
                 age_dm_diagnosis=data["age_dm_diagnosis"], dm_duration=data["dm_duration"], hipo_mes=data["hipo_mes"],
                  internacao_dm=data["internacao_dm"], sbp_repous=data["sbp_repous"], dbp_repous=data["dbp_repous"],
@@ -24,6 +55,7 @@ class PatientsViewSet(viewsets.ModelViewSet):
                     rr_resting=data["rr_resting"], rr_db=data["rr_db"], rr_valsalva=data["rr_valsalva"],
                      rr_standing=data["rr_standing"], obrienc_cs=data["obrienc_cs"], can_status=data["can_status"],
                       brs_status=data["brs_status"], collected_data=data["collected_data"], observations=data["observations"])
+    
         new_patient.save()  
         serializer = PatientsSerializer(new_patient)
         return Response(serializer.data)

@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from smart_selects.db_fields import ChainedForeignKey
 from django.utils import timezone
+from django.contrib import admin
 
 
 GENDER_CHOICES = (
@@ -49,18 +50,20 @@ STATES_CHOICES = (
   ("TO" , "Tocantins")
 )
 
+
+
 class Patient(models.Model):
   collected_data = models.DateTimeField(default=timezone.now) 
   subject_name = models.CharField(max_length=200)
-  age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)],default=0)
+  age = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)])
   initials = models.CharField(max_length=10) 
   gender = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(2)], choices=GENDER_CHOICES) 
-  weight = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(500.0)],default=0)
-  height = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(350)],default=0)
-  phone = models.CharField(max_length=15)
+  weight = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(500.0)])
+  height = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(3)])
+  phone = models.CharField(max_length=15, blank=True)
   state = models.CharField(max_length=2, choices = STATES_CHOICES)
   city = models.CharField(max_length=100)
-  bmi = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(150.0)], default=None) #Variavel calculada
+  bmi = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(150.0)], default=0.0) #Variavel calculada #Variavel calculada
   bsa = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0) #Variavel calculada
   smoker = models.BooleanField(default=False)
   alcohol = models.BooleanField(default=False)
@@ -85,15 +88,20 @@ class Patient(models.Model):
   rr_standing = models.FloatField( validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
   obrienc_cs = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0)
   can_status = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(10)],default=0)
-  brs_status = models.CharField(max_length=50)
-  observations = models.TextField(max_length=1000)
+  brs_status = models.CharField(max_length=50,  blank=True)
+  observations = models.TextField(max_length=1000,  blank=True)
+
+  @property
+  def cal_bmi(self):
+    self.bmi = (self.weight / (self.height * self.height) )   
+
 
   def __str__(self):
-    return "[Paciente Iniciais: " + self.initials + " | "  + "Paciente ID: " + str(self.id)+ "]"
-
+    #return "[Paciente Iniciais: " + self.initials + " | "  + "Paciente ID: " + str(self.id)+ "]"
+    return "Paciente: " + str(self.id)
 
 #
-class Medicines(models.Model):
+class Medicine(models.Model):
   collected_data = models.DateTimeField(default=timezone.now)
   patient_medicines = models.ForeignKey(
         Patient, on_delete=models.CASCADE)
@@ -115,10 +123,10 @@ class Medicines(models.Model):
   mtf_mg = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
   
   def __str__(self):
-    return "[Paciente ID: " + str(self.patient_medicines.id) + " | "  + "Medicamento ID: " +  str(self.id)+ "]"
+    #return "[Paciente ID: " + str(self.patient_medicines.id) + " | "  + "Medicamento ID: " +  str(self.id)+ "]"
+    return "Medicamento: " + str(self.id)
 
-
-class ExamsResults(models.Model):
+class ExamsResult(models.Model):
   collected_data = models.DateTimeField(default=timezone.now)
   patient_exams = models.ForeignKey(
         Patient, on_delete=models.CASCADE)
@@ -148,8 +156,8 @@ class ExamsResults(models.Model):
   ureia = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)
 
   def __str__(self):
-    return "[Paciente ID: " + str(self.patient_exams.id) + " | "  + "Resultado Exame ID: " +str(self.id)+ "]"
-
+    #return "[Paciente ID: " + str(self.patient_exams.id) + " | "  + "Resultado Exame ID: " +str(self.id)+ "]"
+    return "Resultado de Exame: " +str(self.id)
 
 
 class CollectData(models.Model):
@@ -169,10 +177,10 @@ class CollectData(models.Model):
   observations = models.TextField(max_length=1000)
 
   def __str__(self):
-    return "[Paciente ID: " + str(self.patient_data.id) + " | "  + "Dados Coletado ID: " + str(self.id)+ "]"
-
+    #return "[Paciente ID: " + str(self.patient_data.id) + " | "  + "Dados Coletado ID: " + str(self.id)+ "]"
+    return "Dados coletado: " + str(self.id)
 #
-class Conditions(models.Model):
+class Condition(models.Model):
   collected_data = models.DateTimeField(default=timezone.now)
   patient_conditions = models.OneToOneField(
         Patient, on_delete=models.CASCADE)
@@ -189,8 +197,8 @@ class Conditions(models.Model):
   pn_signs = models.CharField(max_length=200)
 
   def __str__(self):
-    return "[Paciente ID: " + str(self.patient_conditions.id) + " | "  + "Condições ID: " + str(self.id)+ "]"
-
+    #return "[Paciente ID: " + str(self.patient_conditions.id) + " | "  + "Condições ID: " + str(self.id)+ "]"
+    return "Condições: " + str(self.id)
 
 class HRVTime(models.Model):
   collected_data = models.DateTimeField(default=timezone.now) #será uma classe futuramente, não ha necessidade
@@ -219,7 +227,8 @@ class HRVTime(models.Model):
   file_hrvtime = models.FileField(null=True, blank=True) # limita apenas TXT
 
   def __str__(self):
-    return "[Paciente ID: " + str(self.collectdata_time.patient_data.id) + " | " + "Dados Coletado ID: " + str(self.collectdata_time.id) + " | " + "HRV Time ID: " + str(self.id)+ "]"
+    #return "[Paciente ID: " + str(self.collectdata_time.patient_data.id) + " | " + "Dados Coletado ID: " + str(self.collectdata_time.id) + " | " + "HRV Time ID: " + str(self.id)+ "]"
+    return str(self.collectdata_time.patient_data)
 
 class HRVFreq(models.Model):
   collected_data = models.DateTimeField(default=timezone.now) #será uma classe futuramente, não ha necessidade
@@ -252,6 +261,6 @@ class HRVFreq(models.Model):
   lf_nu_welch = models.FloatField(null=True)
   hf_nu_welch = models.FloatField(null=True)
   file_hrvfreq = models.FileField(null=True) # limita apenas TXT
-
+  
   def __str__(self):
-    return "[Paciente ID: " + str(self.collectdata_freq.patient_data.id) + " | " + "Dados Coletado ID: " + str(self.collectdata_freq.id) + " | " + "HRV Freq ID: " + str(self.id) + "]"
+    return str(self.collectdata_freq.patient_data)
