@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from patient.models import Patient, Medicine, ExamsResult, CollectData, Condition, HRVTime, HRVFreq
+from patient.models import Patient, Medicine, ExamsResult, CollectData, Condition, HRVTime, HRVFreq, HRVNonLinear
 
 
 class PatientsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Patient
         fields = ['id', 'subject_name', 'age', 
@@ -16,7 +17,7 @@ class PatientsSerializer(serializers.ModelSerializer):
           'can_status', 'brs_status', 'collected_data', 'observations']
 
 class PrototipePatientsSerializer(serializers.ModelSerializer):
-    class Meta:
+    class Meta:        
         model = Patient
         fields = ['id', 'subject_name', 'age', 'initials']
 
@@ -46,10 +47,8 @@ class CollectDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = CollectData
         fields = [ 'id', 'patient_data','study', 'ecg', 
-        'ppg', 'abp','abspathrecord_times', 'sampling_freq_hz',
-         'device', 'ecg_processing_status',
-         'ppg_processing_status', 'brs_processing_status', 
-         'observations']
+        'ppg', 'abp', 'emg', 'abspathrecord_times', 'sampling_freq_hz',
+         'device', 'observations']
 
 class ConditionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,7 +67,7 @@ class HRVTimeSerializer(serializers.ModelSerializer):
         'cv', 'rmssd', 'sdsd',
         'nn50', 'pnn50_pr', 'nn20', 'pnn20',
         'pnn20_pr', 'hr_change', 'gti',
-        'tinn', 'si', 'file_hrvtime']
+        'tinn', 'si']
 
 class HRVFreqSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,4 +79,21 @@ class HRVFreqSerializer(serializers.ModelSerializer):
         'power_lf_lomb', 'power_hf_lomb', 'lf_nu_lomb', 'hf_nu_lomb',
         'ulf_welch', 'vlf_welch', 'lf_welch',
         'hf_welch', 'ttlpwr_welch', 'lfhf_welch', 'power_vlf_welch',
-        'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch', 'file_hrvfrq']
+        'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch']
+
+
+class HRVNonLinearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HRVNonLinear
+        fields = [ 'id', 'collectdata_non_lin','sd1','sd2','sd1_sd2_ratio','ellipse_area','csi','cvi','alpha1',
+                    'alpha2','d2_10','d2_20','ent_aprox_1_01','ent_aprox_1_015',
+                    'ent_aprox_1_02','ent_aprox_1_025','ent_aprox_2_01','ent_aprox_2_015',
+                    'ent_aprox_2_02','ent_aprox_2_025','ent_amostra_1','ent_amostra_2',
+                    'ent_multiescala_e3','ent_multiescala_e5','ent_fuzzy','ent_shannon_1',
+                    'ent_shannon_2','ent_spectral','ent_permutation_1','norm_entropy',
+                    'ent_permutation_2','ent_conditional','ent_corrected_cond','ctm_r1',
+                    'ctm_r2','ctm_r3','area_sodp_rr_log','area_sodp_rr','mean_dr1','mean_dr2',
+                    'mean_dr3','mean_dr4','mean_dr5'    
+        ]
+
+   

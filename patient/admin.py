@@ -1,11 +1,24 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Patient, Medicine,ExamsResult, CollectData, Condition, HRVTime, HRVFreq
+from .models import Patient, Medicine,ExamsResult, CollectData, Condition, HRVTime, HRVFreq, HRVNonLinear
 
 #from ./api/serializer import PatientsSerializer
 
+def calc_bmi(weight, height):
+    return (weight / (height * height) ) 
+
+def calc_raiz_q(x):
+    return x ** (1/2)
+
+def calc_bsa(weight, height):
+    cm = 100
+    return calc_raiz_q((height * cm ) * weight / 3600)
+
+
+
 class PatientAdmin(admin.ModelAdmin):
     site_header = 'Register Patient'
+
     fieldsets = (
         ('Section 0',
         {
@@ -13,13 +26,13 @@ class PatientAdmin(admin.ModelAdmin):
         }),
         ('Section 1',
         {
-            'fields' : ('subject_name',
+            'fields' : ( 'bmi', 'subject_name',
                          'gender', 'age', 'phone',
                         'state', 'city')
         }),
          ('Section 2',
         {
-            'fields' : ( 'weight', 'height',('smoker', 'alcohol'), 
+            'fields' : ( 'weight', 'height',('smoker', 'alcohol'),
                         'physical_activity', 'dm', 'type_dm', 'age_dm_diagnosis', 
                         'dm_duration', 'hipo_mes', 'internacao_dm', 'sbp_repous',
                         'dbp_repous', 'sbp_empe', 'dbp_empe', 'sbp_change', 
@@ -32,15 +45,21 @@ class PatientAdmin(admin.ModelAdmin):
             'fields' : ('can_status', 'brs_status', 'observations')
         }),
     )
-    exclude = ('bmi', 'bsa')
 
-    
     list_display = ('id' , 'initials')
     search_fields = ('id',)
 
+    # def get_form(self, request, obj=None):
+    #     fields = list(super(PatientAdmin, self).get_fields(request, obj))
+    #     exclude_set = set()
+    #     if obj:  # obj will be None on the add page, and something on change pages
+    #         exclude_set.add('bmi')
+    #     return [f for f in fields if f not in exclude_set]
 
-
-
+    # def __init__(self, *arg, **kwargs, obj=None):
+    #     super().__init__(*arg, **kwargs)
+    #     print(self.fields)   
+    
 class MedicinesAdmin(admin.ModelAdmin):
     #fieldsets = [('Text', {'fields': ['patient_medicines']})]
     list_display = ('id' , 'patient_medicines')
@@ -66,7 +85,10 @@ class HRVFreqAdmin(admin.ModelAdmin):
     list_display = ('id', 'collectdata_freq', '__str__')
     search_fields = ('id',)
 
-Patient.bmi = 3
+class HRVNonLinearAdmin(admin.ModelAdmin):
+    list_display = ('id', 'collectdata_non_lin', '__str__')
+    search_fields = ('id',)
+
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Medicine, MedicinesAdmin )
 admin.site.register(ExamsResult, ExamsResultsAdmin)
@@ -74,3 +96,4 @@ admin.site.register(Condition, ConditionsAdmin)
 admin.site.register(CollectData, CollectDataAdmin)
 admin.site.register(HRVTime, HRVTimeAdmin)
 admin.site.register(HRVFreq, HRVFreqAdmin )
+admin.site.register(HRVNonLinear, HRVNonLinearAdmin )

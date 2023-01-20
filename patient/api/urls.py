@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import PatientsViewSet, PrototipePatientsViewSet, MedicinesViewSet, ExamsResultsViewSet, CollectDataViewSet, ConditionsViewSet, HRVTimeViewSet, HRVFreqViewSet
+from .views import PatientsViewSet, PrototipePatientsViewSet, MedicinesViewSet, ExamsResultsViewSet, CollectDataViewSet, ConditionsViewSet, HRVTimeViewSet, HRVFreqViewSet, HRVNonLinearViewSet
 from rest_framework.routers import DefaultRouter
 
 
@@ -12,6 +12,7 @@ router.register("collectdata", CollectDataViewSet, basename="collectdata")
 router.register("condition", ConditionsViewSet, basename="condition")
 router.register("hrvtime", HRVTimeViewSet, basename="hrvtime")
 router.register("hrvfreq", HRVFreqViewSet, basename="hrvfreq")
+router.register("hrvnonlinear", HRVNonLinearViewSet, basename="hrvnonlinear")
 
 
 urlpatterns = [
