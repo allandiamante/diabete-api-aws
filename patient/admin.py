@@ -78,15 +78,15 @@ class CollectDataAdmin(admin.ModelAdmin):
     search_fields = ('id',)
 
 class HRVTimeAdmin(admin.ModelAdmin):
-    list_display = ('id' , 'collectdata_time', '__str__')
+    list_display = ('id' , 'collectdata_time')
     search_fields = ('id',)
 
 class HRVFreqAdmin(admin.ModelAdmin):
-    list_display = ('id', 'collectdata_freq', '__str__')
+    list_display = ('id', 'collectdata_freq')
     search_fields = ('id',)
 
 class HRVNonLinearAdmin(admin.ModelAdmin):
-    list_display = ('id', 'collectdata_non_lin', '__str__')
+    list_display = ('id', 'collectdata_non_lin')
     search_fields = ('id',)
 
 admin.site.register(Patient, PatientAdmin)

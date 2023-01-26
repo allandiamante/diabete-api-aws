@@ -29,7 +29,7 @@ class MedicinesSerializer(serializers.ModelSerializer):
         'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
          'omeprazol_mg', 'ranitidina_mg', 'carbamazpn_mg',
          'anticoncepcional', 'ass_mg', 'lt4_mg', 'collected_data',
-          'mtf_mg']
+          'mtf_mg', 'observations']
 
 class ExamsResultsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -48,7 +48,7 @@ class CollectDataSerializer(serializers.ModelSerializer):
         model = CollectData
         fields = [ 'id', 'patient_data','study', 'ecg', 
         'ppg', 'abp', 'emg', 'abspathrecord_times', 'sampling_freq_hz',
-         'device', 'observations']
+         'device', 'observations', 'ecg_signal']
 
 class ConditionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,7 +65,7 @@ class HRVTimeSerializer(serializers.ModelSerializer):
         'nn_median', 'nn_mode', 'nn_variance',
         'nn_skew', 'nn_kurt', 'nn_iqr', 'sd_nn',
         'cv', 'rmssd', 'sdsd',
-        'nn50', 'pnn50_pr', 'nn20', 'pnn20',
+        'nn50', 'pnn50_pr', 'nn20',
         'pnn20_pr', 'hr_change', 'gti',
         'tinn', 'si']
 

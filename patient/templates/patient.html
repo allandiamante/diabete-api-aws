@@ -1,0 +1,42 @@
+{% extends 'modelo.html' %}
+{% load static %}
+
+{% block up-content %}
+{% endblock %}
+
+
+{% block mid-content %}
+
+<h3>List of Patient</h3>
+<p class="lead">You will be able to edit and delete patient</p>
+<a href="{% url 'patient' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a Patient</a>
+<hr>
+<div class="table-responsive">
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Initials</th>
+        <th>Options</th>
+    </tr>
+
+    {% for patient in object_list %}
+    <tr>
+        <td>{{ patient.id }}</td>
+        <td>{{ patient.subject_name }}</td>
+        <td>{{ patient.initials }}</td>
+        <td>
+            <a href="{% url 'ed-patient' patient.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
+            <a href="{% url 'ex-patient' patient.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4"> Empty fields</td>
+    </tr>
+    {% endfor %}
+
+</table>
+</div>
+
+{% endblock %}

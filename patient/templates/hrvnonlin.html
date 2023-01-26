@@ -1,0 +1,43 @@
+{% extends 'modelo.html' %}
+
+
+{% load static %}
+
+{% block up-content %}
+{% endblock %}
+
+{% block mid-content %}
+
+<h3>List of HRV Non Linear</h3>
+<p class="lead">Preencha todos os campos obrigatórios</p>
+<a href="{% url 'hrvnonlin' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a HRV Non Linear</a>
+<hr>
+<div class="table-responsive">
+<table class="table table-striped">
+    <tr>
+        <th>HRV Non Linear ID</th>
+        <th>Collect Data ID </th>
+        <th>Patient Initials</th>
+        <th>Options</th>
+    </tr>
+
+    {% for hrvnonlin in object_list %}
+    <tr>
+        <td>{{ hrvnonlin.id }}</td>
+        <td>{{ hrvnonlin.collectdata_non_lin.id }}</td>
+        <td>{{ hrvnonlin.collectdata_non_lin.patient_data.initials}}</td>
+        <td>
+            <a href="{% url 'ed-hrvnonlin' hrvnonlin.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
+            <a href="{% url 'ex-hrvnonlin' hrvnonlin.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4"> Empty fields</td>
+    </tr>
+    {% endfor %}
+
+</table>
+</div>
+
+{% endblock %}

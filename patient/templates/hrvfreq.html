@@ -1,0 +1,43 @@
+{% extends 'modelo.html' %}
+
+
+{% load static %}
+
+{% block up-content %}
+{% endblock %}
+
+{% block mid-content %}
+
+<h3>List of HRV Frequence</h3>
+<p class="lead">Preencha todos os campos obrigatórios</p>
+<a href="{% url 'hrvfreq' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a HRV Frequence</a>
+<hr>
+<div class="table-responsive">
+<table class="table table-striped">
+    <tr>
+        <th>HRV Frequence ID</th>
+        <th>Collect Data ID </th>
+        <th>Patient Initials</th>
+        <th>Options</th>
+    </tr>
+
+    {% for hrvfreq in object_list %}
+    <tr>
+        <td>{{ hrvfreq.id }}</td>
+        <td>{{ hrvfreq.collectdata_freq.id }}</td>
+        <td>{{ hrvfreq.collectdata_freq.patient_data.initials}}</td>
+        <td>
+            <a href="{% url 'ed-hrvfreq' hrvfreq.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
+            <a href="{% url 'ex-hrvfreq' hrvfreq.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4"> Empty fields</td>
+    </tr>
+    {% endfor %}
+
+</table>
+</div>
+
+{% endblock %}

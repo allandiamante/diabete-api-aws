@@ -1,0 +1,35 @@
+{% extends 'modelo.html' %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+
+
+{% block up-content %}
+
+    <div class="row" >
+        <div class="col-md-4 mx-auto" id="id-container2">                            
+
+            <h3>{{ title }}</h3>
+            <h3>
+                Autenticate
+            </h3>
+            <hr>
+
+                    <form action="" method="POST">
+
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <hr>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" >Login</button>
+                        </div>
+                        <hr>
+                    </form>
+                </div>
+            </div>
+
+            {% endblock %}
+            {% block mid-content %}
+            {% endblock %}

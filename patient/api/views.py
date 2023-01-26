@@ -44,6 +44,7 @@ def calc_postural_drop(sbp_chambe, dbp_chambe):
 class PatientsViewSet(viewsets.ModelViewSet):
     serializer_class = PatientsSerializer
 
+
     def get_queryset(self):
         patients = Patient.objects.all()
         return patients   
@@ -72,6 +73,11 @@ class PatientsViewSet(viewsets.ModelViewSet):
         new_patient.save()  
         serializer = PatientsSerializer(new_patient)
         return Response(serializer.data)
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['']
+    #     return context
 
 class MedicinesViewSet(viewsets.ModelViewSet):
     serializer_class = MedicinesSerializer
@@ -133,7 +139,7 @@ class CollectDataViewSet(viewsets.ModelViewSet):
             collected_data=data["collected_data"],
             patient_data=Patient.objects.get(pk=int(data["patient_data"])),
              study=data['study'], ecg=data["ecg"], ppg=data["ppg"], abp=data["abp"], emg = data["emg"], 
-              abspathrecord_times=data["abspathrecord_times"], sampling_freq_hz=data["sampling_freq_hz"],  file_hrv=data["file_hrv"],
+              abspathrecord_times=data["abspathrecord_times"], sampling_freq_hz=data["sampling_freq_hz"],  ecg_signal=data["ecg_signal"],
                device=data["device"], observations=data["observations"])
 
         new_collectdata.save() 
@@ -177,7 +183,7 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
              nn_mean=data['nn_mean'], nn_median=data["nn_median"], nn_mode=data["nn_mode"], nn_variance=data["nn_variance"],
               nn_skew=data["nn_skew"], nn_kurt=data["nn_kurt"], nn_iqr=data["nn_iqr"],
                sd_nn=data["sd_nn"], cv=data["cv"], rmssd=data["rmssd"],
-                sdsd=data["sdsd"],nn50=data["nn50"], pnn50_pr=data["pnn50_pr"], nn20=data["nn20"], pnn20=data["pnn20"],
+                sdsd=data["sdsd"],nn50=data["nn50"], pnn50_pr=data["pnn50_pr"], nn20=data["nn20"],
                 pnn20_pr=data["pnn20_pr"], hr_change=data["hr_change"], gti=data["gti"],
                 tinn=data["tinn"], si=data["si"])
 

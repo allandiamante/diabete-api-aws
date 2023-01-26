@@ -1,0 +1,213 @@
+{% load static %}
+
+<!doctype html>
+<html lang="pt-br" class="h-100">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Gerenciador de pacientes com propensões a diabetes">
+    <meta name="author" content="Allan D. de Souza">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Patient Mananger</title>
+
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css"  href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
+    
+    <!-- Custom styles for this template -->
+
+  </head>
+  <body class="d-flex flex-column h-100">
+    
+{% block header %}
+<header>
+  
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #75b7e6;">
+    
+      <div class="container" >
+        
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav">
+
+            
+            <a class="btn btn-secondary " href="/" >
+              <i class="fa fa-home fa-sm"></i>
+              Home
+            </a>          
+
+
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-male fa-lg "></i>
+                Patient
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'ls-patient' %}">List of Patient </a>
+                <a class="dropdown-item" href="{% url 'patient' %}">Register Patient</a>
+                
+              </div>
+            </div>
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-capsules fa-lg"></i>
+                Medicine
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'ls-medicine' %}">List of Medicine</a>
+                <a class="dropdown-item " href="{% url 'medicine' %}">Register Medicine</a>
+                
+              </div>
+            </div>
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-list-check fa-lg"></i>
+                Exams Result
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'ls-examsresult' %}">List of ExamsResult</a>
+                <a class="dropdown-item " href="{% url 'examsresult' %}">Register ExamsResult</a>
+                
+              </div>
+            </div>
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-heartbeat fa-lg"></i>
+                Condition
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'ls-condition' %}">List of condition</a>
+                <a class="dropdown-item " href="{% url 'condition' %}">Register condition</a>
+                
+              </div>
+            </div>
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-syringe fa-lg"></i>
+                Collect Data
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'ls-collectdata' %}">List of CollectData</a>
+                <a class="dropdown-item " href="{% url 'collectdata' %}">Register CollectData</a>
+                
+              </div>
+            </div>
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-chart-line fa-lg"></i>
+                HRV Time
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">              
+                <a class="dropdown-item" href="{% url 'ls-hrvtime' %}">List of HRVTime</a>
+              <a class="dropdown-item " href="{% url 'hrvtime' %}">Register HRVTime</a>
+                
+              </div>
+            </div>
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-chart-line fa-lg"></i>
+                HRV Freq
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'ls-hrvfreq' %}">List of HRVFreq</a>
+                <a class="dropdown-item " href="{% url 'hrvfreq' %}">Register HRVFreq</a>
+                
+              </div>
+            </div>
+            <div class="dropdown show">
+              <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-chart-line fa-lg"></i>
+                HRV Non Lin
+              </a>
+            
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'ls-hrvnonlin' %}">List of HRVNonLinear</a>
+                <a class="dropdown-item " href="{% url 'hrvnonlin' %}">Register HRVNonLinear</a>
+                
+              </div>
+            </div>    
+            
+          </ul>
+          
+        </div>
+      </div>
+
+      <ul class="navbar-nav" style="margin-left: 1cm; position:absolute">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item dropdown  " >
+          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
+            <span id="username">{{ request.user.username }}</span>
+          </a>        
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#"><i class="fa fa-user"></i>My Account</a>
+          <a class="dropdown-item" href="#"><i class="fa fa-lock"></i>Editing Password</a>
+          <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Exit</a>
+        </li>    
+        {% else %}
+        <li class="nav-item  " >
+          <a class="nav-link" href="{% url 'login' %}">
+            <i class="fa fa-sign-in fa-lg" aria-hidden="true"></i>
+              Login
+          </a>       
+        {% endif %}
+
+
+      </ul>
+      
+    </div>
+  </nav>
+</header>
+{% endblock %}
+
+
+<main class="flex-shrink-0">
+  <!-- FORMS --><br>
+  <div class="container">
+  {% block up-content %}
+    <h1 class="mt-5">Patient Mananger</h1>
+    <p class="lead">Pin a footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with </p>
+    <p>Back to <a href="/docs/5.3/examples/sticky-footer/">the default sticky footer</a> minus the navbar.</p>
+    
+    {% endblock %}
+  </div>
+</main>
+
+<div class="container" id="id-container">
+{% block mid-content %}
+{% endblock %}
+</div>
+<br>
+
+{% block footer %}
+<footer class="footer mt-auto py-3 " style="background-color: #75b7e6e1;">
+  <div class="container">
+
+    <!--foote_bottom_ul_amrc ends here-->
+    <p class="text-center">Copyright @2023 | Designed With by <a href="#">Allan D. de Souza</a></p>
+    
+    <!-- <ul class="social_footer_ul">
+    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+    <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+    </ul> -->
+    <!--social_footer_ul ends here-->
+    </div>
+</footer>
+{% endblock %}
+
+
+
+<script src="{% static 'js/bootstrap.bundle.min' %}" ></script>
+<script src="{% static 'js/jquery-min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

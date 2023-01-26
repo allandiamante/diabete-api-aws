@@ -1,0 +1,43 @@
+{% extends 'modelo.html' %}
+
+
+{% load static %}
+
+{% block up-content %}
+{% endblock %}
+
+{% block mid-content %}
+
+<h3>List of Condition</h3>
+<p class="lead">Preencha todos os campos obrigatórios</p>
+<a href="{% url 'condition' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a Condition</a>
+<hr>
+<div class="table-responsive">
+<table class="table table-striped">
+    <tr>
+        <th>Condition ID</th>
+        <th>Patient ID</th>
+        <th>Patient Initials</th>
+        <th>Options</th>
+    </tr>
+
+    {% for condition in object_list %}
+    <tr>
+        <td>{{ condition.id }}</td>
+        <td>{{ condition.patient_conditions.id }}</td>
+        <td>{{ condition.patient_conditions.initials }}</td>
+        <td>
+            <a href="{% url 'ed-condition' condition.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
+            <a href="{% url 'ex-condition' condition.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4"> Empty fields</td>
+    </tr>
+    {% endfor %}
+
+</table>
+</div>
+
+{% endblock %}

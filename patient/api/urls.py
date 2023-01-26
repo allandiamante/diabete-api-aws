@@ -12,7 +12,7 @@ router.register("collectdata", CollectDataViewSet, basename="collectdata")
 router.register("condition", ConditionsViewSet, basename="condition")
 router.register("hrvtime", HRVTimeViewSet, basename="hrvtime")
 router.register("hrvfreq", HRVFreqViewSet, basename="hrvfreq")
-router.register("hrvnonlinear", HRVNonLinearViewSet, basename="hrvnonlinear")
+router.register("hrvnonlin", HRVNonLinearViewSet, basename="hrvnonlin")
 
 
 urlpatterns = [
