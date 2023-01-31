@@ -59,7 +59,8 @@ STATES_CHOICES = (
   ("TO" , "Tocantins")
 )
 
-#arrumar o tipo da DM com box
+#inserir o novo atributo unico de busca
+#
 
 class Patient(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data", default=timezone.now) 
@@ -76,7 +77,7 @@ class Patient(models.Model):
   bsa = models.FloatField(verbose_name="Bsa",  validators=[MinValueValidator(0.0), MaxValueValidator(150.0)], default=0.0) #Variavel calculada
   smoker = models.BooleanField(verbose_name="Smoker", default=False)
   alcohol = models.BooleanField(verbose_name="Alcohol", default=False)
-  physical_activity = models.PositiveSmallIntegerField(verbose_name="Physical Activity", validators=[MinValueValidator(0), MaxValueValidator(10)], blank=True) 
+  physical_activity = models.PositiveSmallIntegerField(verbose_name="Physical Activity", validators=[MinValueValidator(0), MaxValueValidator(10)], blank=True, default=0) 
   dm = models.BooleanField(verbose_name="Dm", default=False)# habilitar a partir da relação Dm
   type_dm = models.PositiveSmallIntegerField(verbose_name="Type Dm", validators=[MinValueValidator(0), MaxValueValidator(2)],default=0)# habilitar a partir da relação Dm
   age_dm_diagnosis = models.PositiveSmallIntegerField(verbose_name="Age Dm_Diagnosis", validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)# habilitar a partir da relação Dm
@@ -99,10 +100,6 @@ class Patient(models.Model):
   can_status = models.PositiveSmallIntegerField(verbose_name="Can Status", validators=[MinValueValidator(0), MaxValueValidator(10)], blank=True, null=True)
   brs_status = models.CharField(verbose_name="Brs Status", max_length=50,  blank=True, null=True)
   observations = models.TextField(verbose_name="Observations", max_length=1000,  blank=True, null=True)
-
-  @property
-  def cal_bmi(self):
-    self.bmi = (self.weight / (self.height * self.height) )   
 
   def __str__(self):
     #return "[Paciente Iniciais: " + self.initials + " | "  + "Paciente ID: " + str(self.id)+ "]"
@@ -201,7 +198,7 @@ class CollectData(models.Model):
   abspathrecord_times = models.PositiveSmallIntegerField(verbose_name="Abspathrecord Times", validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0, null=True)
   sampling_freq_hz = models.PositiveSmallIntegerField(verbose_name="Sampling Freq_Hz", validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0, null=True)
   device = models.PositiveSmallIntegerField(verbose_name="Device", validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0, null=True)
-  ecg_signal = models.FileField(verbose_name="Ecg Signal (.txt)", blank=True, null=True) # limita apenas TXT
+  ecg_signal = models.FileField(verbose_name="Ecg Signal (.txt)", upload_to="txt/",blank=True, null=True) # limita apenas TXT
   observations = models.TextField(verbose_name="Observations", max_length=1000, blank=True, null=True)
 
   def __str__(self):
@@ -211,25 +208,25 @@ class CollectData(models.Model):
 class HRVTime(models.Model):
   collected_data = models.DateTimeField(default=timezone.now) #será uma classe futuramente, não ha necessidade
   collectdata_time = models.OneToOneField(        CollectData, on_delete=models.CASCADE)
-  nn_mean = models.FloatField(null=True)
-  nn_median = models.FloatField(null=True)
-  nn_mode = models.FloatField(null=True)
-  nn_variance = models.FloatField(null=True)
-  nn_skew = models.FloatField(null=True)
-  nn_kurt = models.FloatField(null=True)
-  nn_iqr = models.FloatField(null=True)
-  sd_nn = models.FloatField(null=True)
-  cv = models.FloatField(null=True)
-  rmssd = models.FloatField(null=True)
-  sdsd = models.FloatField(null=True)
-  nn50 = models.FloatField(null=True)
-  pnn50_pr = models.FloatField(null=True)
-  nn20 = models.FloatField(null=True)
-  pnn20_pr = models.FloatField(null=True)
-  hr_change = models.FloatField(null=True)
-  gti = models.FloatField(null=True)
-  tinn = models.FloatField(null=True)
-  si = models.FloatField(null=True)
+  nn_mean = models.FloatField(null=True, blank=True)
+  nn_median = models.FloatField(null=True, blank=True)
+  nn_mode = models.FloatField(null=True, blank=True)
+  nn_variance = models.FloatField(null=True, blank=True)
+  nn_skew = models.FloatField(null=True, blank=True)
+  nn_kurt = models.FloatField(null=True, blank=True)
+  nn_iqr = models.FloatField(null=True, blank=True)
+  sd_nn = models.FloatField(null=True, blank=True)
+  cv = models.FloatField(null=True, blank=True)
+  rmssd = models.FloatField(null=True, blank=True)
+  sdsd = models.FloatField(null=True, blank=True)
+  nn50 = models.FloatField(null=True, blank=True)
+  pnn50_pr = models.FloatField(null=True, blank=True)
+  nn20 = models.FloatField(null=True, blank=True)
+  pnn20_pr = models.FloatField(null=True, blank=True)
+  hr_change = models.FloatField(null=True, blank=True)
+  hti = models.FloatField(null=True, blank=True)
+  tinn = models.FloatField(null=True, blank=True)
+  si = models.FloatField(null=True, blank=True)
 
 
   def __str__(self):

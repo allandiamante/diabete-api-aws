@@ -22,23 +22,35 @@ def ret_initials(subject_name):
     return initials
 
 def calc_bmi(weight, height):
-    return (weight / (height * height) ) 
+    if(weight and height != 0):
+        return (weight / (height * height) )
+    else:
+        return 0 
 
 def calc_raiz_q(x):
     return x ** (1/2)
 
 def calc_bsa(weight, height):
     cm = 100
-    return calc_raiz_q((height * cm ) * weight / 3600)
-
+    if(weight and height != 0):
+        return calc_raiz_q((height * cm ) * weight / 3600)
+    else:
+        return 0 
+    
+#pensar saida caso não inserida no formulario os parametros de entradas, ja q eles não sao obrigatorio
 def calc_sbp_dbp(empe, repous):
-    return (empe - repous)
+    if(empe or repous !=  None):            
+        return (empe - repous)
+    else: 
+        return 0
 
 def calc_postural_drop(sbp_chambe, dbp_chambe):
     if(sbp_chambe > 20 or dbp_chambe > 10):
         return True
     else:
         return False
+
+
 
 
 class PatientsViewSet(viewsets.ModelViewSet):
@@ -83,12 +95,12 @@ class MedicinesViewSet(viewsets.ModelViewSet):
     serializer_class = MedicinesSerializer
 
     def get_queryset(self):
-        medicines = Medicines.objects.all()
+        medicines = Medicine.objects.all()
         return medicines
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        new_medicines = Medicines.objects.create(
+        new_medicines = Medicine.objects.create(
             collected_data=data["collected_data"],
             patient_medicines=Patient.objects.get(pk=int(data["patient_medicines"])),
              insulin=data['insulin'], ace_arb=data["ace_arb"], sinvas_mg=data["sinvas_mg"], atorvas_mg=data["atorvas_mg"],
@@ -105,12 +117,12 @@ class ExamsResultsViewSet(viewsets.ModelViewSet):
     serializer_class = ExamsResultsSerializer
 
     def get_queryset(self):
-        examsresults = ExamsResults.objects.all()
+        examsresults = ExamsResult.objects.all()
         return examsresults
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        new_examsresults = ExamsResults.objects.create(
+        new_examsresults = ExamsResult.objects.create(
             collected_data=data["collected_data"],
             patient_exams=Patient.objects.get(pk=int(data["patient_exams"])),
              hba1c_percent=data['hba1c_percent'], hba1c_mmol_mol=data["hba1c_mmol_mol"], hb_g_dl=data["hb_g_dl"], glicemia_mg_dl=data["glicemia_mg_dl"],
@@ -124,6 +136,28 @@ class ExamsResultsViewSet(viewsets.ModelViewSet):
 
         new_examsresults.save() 
         serializer = ExamsResultsSerializer(new_examsresults)
+        return Response(serializer.data)
+
+class ConditionsViewSet(viewsets.ModelViewSet):      
+
+    serializer_class = ConditionsSerializer
+
+    def get_queryset(self):
+        conditions = Condition.objects.all()
+        return conditions
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        new_conditions = Condition.objects.create(
+            collected_data=data["collected_data"],
+            patient_conditions=Patient.objects.get(pk=data["patient_conditions"]),
+             drge=data['drge'], vitiligo=data["vitiligo"], doenca_celiaca=data["doenca_celiaca"],
+              doenca_pulmonar=data["doenca_pulmonar"], ace_arb=data["ace_arb"], tireoide=data["tireoide"],
+               retinopathy=data["retinopathy"], nephropathy=data["nephropathy"], peripheral_neuropathy=data["peripheral_neuropathy"],
+                pn_symptoms=data["pn_symptoms"], pn_signs=data["pn_signs"])
+
+        new_conditions.save() 
+        serializer = ConditionsSerializer(new_conditions)
         return Response(serializer.data)
 
 class CollectDataViewSet(viewsets.ModelViewSet):
@@ -146,28 +180,6 @@ class CollectDataViewSet(viewsets.ModelViewSet):
         serializer = CollectDataSerializer(new_collectdata)
         return Response(serializer.data)
 
-class ConditionsViewSet(viewsets.ModelViewSet):      
-
-    serializer_class = ConditionsSerializer
-
-    def get_queryset(self):
-        conditions = Conditions.objects.all()
-        return conditions
-
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        new_conditions = Conditions.objects.create(
-            collected_data=data["collected_data"],
-            patient_conditions=Patient.objects.get(pk=int(data["patient_conditions"])),
-             drge=data['drge'], vitiligo=data["vitiligo"], doenca_celiaca=data["doenca_celiaca"],
-              doenca_pulmonar=data["doenca_pulmonar"], ace_arb=data["ace_arb"], tireoide=data["tireoide"],
-               retinopathy=data["retinopathy"], nephropathy=data["nephropathy"], peripheral_neuropathy=data["peripheral_neuropathy"],
-                pn_symptoms=data["pn_symptoms"], pn_signs=data["pn_signs"])
-
-        new_conditions.save() 
-        serializer = ConditionsSerializer(new_conditions)
-        return Response(serializer.data)
-
 class HRVTimeViewSet(viewsets.ModelViewSet):
     serializer_class = HRVTimeSerializer
 
@@ -184,7 +196,7 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
               nn_skew=data["nn_skew"], nn_kurt=data["nn_kurt"], nn_iqr=data["nn_iqr"],
                sd_nn=data["sd_nn"], cv=data["cv"], rmssd=data["rmssd"],
                 sdsd=data["sdsd"],nn50=data["nn50"], pnn50_pr=data["pnn50_pr"], nn20=data["nn20"],
-                pnn20_pr=data["pnn20_pr"], hr_change=data["hr_change"], gti=data["gti"],
+                pnn20_pr=data["pnn20_pr"], hr_change=data["hr_change"], hti=data["hti"],
                 tinn=data["tinn"], si=data["si"])
 
         new_hrvtime.save() 

@@ -66,7 +66,7 @@ class HRVTimeSerializer(serializers.ModelSerializer):
         'nn_skew', 'nn_kurt', 'nn_iqr', 'sd_nn',
         'cv', 'rmssd', 'sdsd',
         'nn50', 'pnn50_pr', 'nn20',
-        'pnn20_pr', 'hr_change', 'gti',
+        'pnn20_pr', 'hr_change', 'hti',
         'tinn', 'si']
 
 class HRVFreqSerializer(serializers.ModelSerializer):

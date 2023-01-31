@@ -84,3 +84,6 @@ img{
 }
 
 
+#div_id_type_dm,#div_id_age_dm_diagnosis, #div_id_dm_duration, #div_id_hipo_mes, #div_id_internacao_dm {
+    margin-left: 5%;
+}

@@ -1,38 +1,94 @@
 from django.views.generic import TemplateView
-from django.views.generic.edit import  CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import  ListView
-from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from .models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq, HRVNonLinear
-# Create your views here.
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+# For atribute calculated
+def ret_initials(subject_name):  
+    remover_palavras  = ['da', 'de', 'do' ]
+    lista_frase = subject_name.split()
+    result = [palavra for palavra in lista_frase if palavra.lower() not in remover_palavras]
+    retorno = ' '.join(result)
+    subject_name = retorno.split(' ')
+    initials = ''
+    for i in subject_name:
+        initials = initials + i[0].upper()
+    print(initials)
+    return initials
+
+def calc_bmi(weight, height):
+    if(weight and height != 0):
+        return (weight / (height * height) )
+    else:
+        return 0 
+
+def calc_raiz_q(x):
+    return x ** (1/2)
+
+def calc_bsa(weight, height):
+    cm = 100
+    if(weight and height != 0):
+        return calc_raiz_q((height * cm ) * weight / 3600)
+    else:
+        return 0 
+
+#pensar saida caso não inserida no formulario os parametros de entradas, ja q eles não sao obrigatorio
+def calc_sbp_dbp(empe, repous):
+    if(empe or repous !=  None):     
+        print(empe - repous)
+        return (empe - repous)
+    else: 
+        return 0
+
+def calc_postural_drop(sbp_change, dbp_change):
+    if(sbp_change > 20 or dbp_change > 10):
+        return True
+    else:
+        return False
 
 class IndexView(TemplateView):
     template_name = 'index.html'
 
 
 
-   ############################ Create ############################
-class PatientCreate(SuccessMessageMixin, CreateView):
+############################ Create ############################
+
+class PatientCreate(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
     model = Patient
     title = 'Register Patient'
     template_name = 'form.html'
-    fields = ['subject_name', 'age', 
-            'initials', 'gender', 'weight', 'height', 'phone',
-            'state', 'city', 'bmi', 'bsa', 'smoker', 'alcohol', 
+    fields = ['subject_name', 'age', 'gender', 'weight', 'height', 'phone',
+            'state', 'city', 'smoker', 'alcohol',
             'physical_activity', 'dm', 'type_dm', 'age_dm_diagnosis', 
             'dm_duration', 'hipo_mes', 'internacao_dm', 'sbp_repous',
-            'dbp_repous', 'sbp_empe', 'dbp_empe', 'sbp_change', 
-            'dbp_change', 'postural_drop', 'mean_hr', 'rr_resting', 
+            'dbp_repous', 'sbp_empe', 'dbp_empe', 'mean_hr', 'rr_resting', 
             'rr_db', 'rr_valsalva', 'rr_standing', 'obrienc_cs', 
             'can_status', 'brs_status', 'collected_data', 'observations']
-
-    sucess_message = 'New Patient added sucessfully'
+   
     success_url = reverse_lazy('ls-patient')
 
-class MedicineCreate(CreateView):
+    def form_valid(self, form):
 
+        url = super().form_valid(form)
+        self.object.initials = ret_initials(self.object.subject_name)
+        self.object.bmi = calc_bmi(self.object.weight, self.object.height)
+        self.object.bsa = calc_bsa(self.object.weight, self.object.height)
+        print(self.object.sbp_empe, self.object.sbp_repous)
+        self.object.sbp_change = calc_sbp_dbp(self.object.sbp_empe, self.object.sbp_repous)
+        self.object.dbp_change = calc_sbp_dbp(self.object.dbp_empe, self.object.dbp_repous)
+        self.object.postural_drop = calc_postural_drop(self.object.sbp_change, self.object.dbp_change)
+        self.object.initials = ret_initials(self.object.subject_name)
+        self.object.save()
+ 
+        return url
+
+class MedicineCreate(LoginRequiredMixin, CreateView):
+
+    login_url = reverse_lazy('login')
     model = Medicine
     title = 'Register Medicine'
     template_name = 'form.html'
@@ -43,10 +99,10 @@ class MedicineCreate(CreateView):
         'anticoncepcional', 'ass_mg', 'lt4_mg', 'collected_data',
         'mtf_mg']
     success_url = reverse_lazy('ls-medicine')
-    sucess_message = 'New Medicine added sucessfully'
 
-class ExamsResultCreate(CreateView):
+class ExamsResultCreate(LoginRequiredMixin, CreateView):
 
+    login_url = reverse_lazy('login')
     model = ExamsResult
     title = 'Register ExamsResult'
     template_name = 'form.html'
@@ -61,8 +117,9 @@ class ExamsResultCreate(CreateView):
 
     success_url = reverse_lazy('ls-examsresult')
 
-class ConditionCreate(CreateView):
+class ConditionCreate(LoginRequiredMixin, CreateView):
 
+    login_url = reverse_lazy('login')
     model = Condition
     title = 'Register Condition'
     template_name = 'form.html'
@@ -72,18 +129,20 @@ class ConditionCreate(CreateView):
         'pn_signs' ]
     success_url = reverse_lazy('ls-condition')
 
-class CollectDataCreate(CreateView):
+class CollectDataCreate(LoginRequiredMixin, CreateView):
 
+    login_url = reverse_lazy('login')
     model = CollectData
     title = 'Register CollectData'
-    template_name = 'form.html'
+    template_name = 'up-form.html'
     fields = [ 'patient_data','study', 'ecg', 
     'ppg', 'abp', 'emg', 'abspathrecord_times', 'sampling_freq_hz', 'ecg_signal',
         'device', 'observations']
     success_url = reverse_lazy('ls-collectdata')
 
-class HRVTimeCreate(CreateView):
+class HRVTimeCreate(LoginRequiredMixin, CreateView):
 
+    login_url = reverse_lazy('login')
     model = HRVTime
     title = 'Register HRVTime'
     template_name = 'form.html'
@@ -92,12 +151,13 @@ class HRVTimeCreate(CreateView):
     'nn_skew', 'nn_kurt', 'nn_iqr', 'sd_nn',
     'cv', 'rmssd', 'sdsd',
     'nn50', 'pnn50_pr', 'nn20',
-    'pnn20_pr', 'hr_change', 'gti',
+    'pnn20_pr', 'hr_change', 'hti',
     'tinn', 'si']
     success_url = reverse_lazy('ls-hrvtime')
 
-class HRVFreqCreate(CreateView):
+class HRVFreqCreate(LoginRequiredMixin, CreateView):
 
+    login_url = reverse_lazy('login')
     model = HRVFreq
     title = 'Register HRVFreq'
     template_name = 'form.html'
@@ -111,9 +171,9 @@ class HRVFreqCreate(CreateView):
     'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch']
     success_url = reverse_lazy('ls-hrvfreq')
 
+class HRVNonLinearCreate(LoginRequiredMixin, CreateView):
 
-class HRVNonLinearCreate(CreateView):
-
+    login_url = reverse_lazy('login')
     model = HRVNonLinear
     title = 'Register HRVNonLinear'
     template_name = 'form.html'
@@ -129,17 +189,16 @@ class HRVNonLinearCreate(CreateView):
     ]
     success_url = reverse_lazy('ls-hrvnonlin')
    
+############################ UPDATE ############################
 
-   ############################ UPDATE ############################
-
-
-class PatientUpdate(SuccessMessageMixin, UpdateView):
+class PatientUpdate( LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Patient
     title = 'ExamsResult'
     template_name = 'ed-form.html'
     fields = ['subject_name', 'age', 
-            'initials', 'gender', 'weight', 'height', 'phone',
-            'state', 'city', 'bmi', 'bsa', 'smoker', 'alcohol', 
+            'gender', 'weight', 'height', 'phone',
+            'state', 'city',  'smoker', 'alcohol', 
             'physical_activity', 'dm', 'type_dm', 'age_dm_diagnosis', 
             'dm_duration', 'hipo_mes', 'internacao_dm', 'sbp_repous',
             'dbp_repous', 'sbp_empe', 'dbp_empe', 'sbp_change', 
@@ -150,8 +209,25 @@ class PatientUpdate(SuccessMessageMixin, UpdateView):
     sucess_message = 'New Patient added sucessfully'
 
 
-class MedicineUpdate(UpdateView):
 
+    def form_valid(self, form):
+
+            url = super().form_valid(form)
+            self.object.initials = ret_initials(self.object.subject_name)
+            self.object.bmi = calc_bmi(self.object.weight, self.object.height)
+            self.object.bsa = calc_bsa(self.object.weight, self.object.height)
+            print(self.object.sbp_empe, self.object.sbp_repous)
+            self.object.sbp_change = calc_sbp_dbp(self.object.sbp_empe, self.object.sbp_repous)
+            self.object.dbp_change = calc_sbp_dbp(self.object.dbp_empe, self.object.dbp_repous)
+            self.object.postural_drop = calc_postural_drop(self.object.sbp_change, self.object.dbp_change)
+            self.object.initials = ret_initials(self.object.subject_name)
+            self.object.save()
+    
+            return url
+
+class MedicineUpdate(LoginRequiredMixin, UpdateView):
+
+    login_url = reverse_lazy('login')
     model = Medicine
     title = 'ExamsResult'
     template_name = 'ed-form.html'
@@ -164,8 +240,9 @@ class MedicineUpdate(UpdateView):
     success_url = reverse_lazy('ls-medicine')
     sucess_message = 'New Medicine added sucessfully'
 
-class ExamsResultUpdate(UpdateView):
+class ExamsResultUpdate(LoginRequiredMixin, UpdateView):
 
+    login_url = reverse_lazy('login')
     model = ExamsResult
     title = 'ExamsResult'
     template_name = 'ed-form.html'
@@ -179,8 +256,9 @@ class ExamsResultUpdate(UpdateView):
         'basek', 'ureia']
     success_url = reverse_lazy('ls-examsresult')
 
-class ConditionUpdate(UpdateView):
+class ConditionUpdate(LoginRequiredMixin, UpdateView):
 
+    login_url = reverse_lazy('login')
     model = Condition
     title = 'ExamsResult'
     template_name = 'ed-form.html'
@@ -190,18 +268,20 @@ class ConditionUpdate(UpdateView):
         'pn_signs']
     success_url = reverse_lazy('ls-condition')
 
-class CollectDataUpdate(UpdateView):
+class CollectDataUpdate(LoginRequiredMixin, UpdateView):
 
+    login_url = reverse_lazy('login')
     model = CollectData
     title = 'ExamsResult'
-    template_name = 'ed-form.html'
+    template_name = 'ed-up-form.html'
     fields = [ 'patient_data','study', 'ecg', 
     'ppg', 'abp', 'emg', 'abspathrecord_times', 'sampling_freq_hz','ecg_signal',
         'device', 'observations']
     success_url = reverse_lazy('ls-collectdata')
 
-class HRVTimeUpdate(UpdateView):
+class HRVTimeUpdate(LoginRequiredMixin, UpdateView):
 
+    login_url = reverse_lazy('login')
     model = HRVTime
     title = 'ExamsResult'
     template_name = 'ed-form.html'
@@ -210,12 +290,13 @@ class HRVTimeUpdate(UpdateView):
     'nn_skew', 'nn_kurt', 'nn_iqr', 'sd_nn',
     'cv', 'rmssd', 'sdsd',
     'nn50', 'pnn50_pr', 'nn20', 
-    'pnn20_pr', 'hr_change', 'gti',
+    'pnn20_pr', 'hr_change', 'hti',
     'tinn', 'si']
     success_url = reverse_lazy('ls-hrvtime')
 
-class HRVFreqUpdate(UpdateView):
+class HRVFreqUpdate(LoginRequiredMixin, UpdateView):
 
+    login_url = reverse_lazy('login')
     model = HRVFreq
     title = 'ExamsResult'
     template_name = 'ed-form.html'
@@ -229,8 +310,9 @@ class HRVFreqUpdate(UpdateView):
     'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch']
     success_url = reverse_lazy('ls-hrvfreq')
 
-class HRVNonLinearUpdate(UpdateView):
+class HRVNonLinearUpdate(LoginRequiredMixin, UpdateView):
 
+    login_url = reverse_lazy('login')
     model = HRVNonLinear
     title = 'ExamsResult'
     template_name = 'ed-form.html'
@@ -246,114 +328,135 @@ class HRVNonLinearUpdate(UpdateView):
     ]
     success_url = reverse_lazy('ls-hrvnonlin')
 
-       ############################ DELETE ############################
+############################ DELETE ############################
 
-
-class PatientDelete(SuccessMessageMixin, DeleteView):
+class PatientDelete( LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Patient
     title = 'ExamsResult'
     template_name = 'ex-form.html'
     sucess_message = 'New Patient added sucessfully'
     success_url = reverse_lazy('ls-patient')
 
-class MedicineDelete(DeleteView):
+class MedicineDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Medicine
     title = 'ExamsResult'
     template_name = 'ex-form.html'
     sucess_message = 'New Medicine added sucessfully'
     success_url = reverse_lazy('ls-medicine')
 
-class ExamsResultDelete(DeleteView):
+class ExamsResultDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = ExamsResult
     title = 'ExamsResult'
     template_name = 'ex-form.html'
     success_url = reverse_lazy('ls-examsresult')
 
-
-class ConditionDelete(DeleteView):
+class ConditionDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Condition
     title = 'ExamsResult'
     template_name = 'ex-form.html'
     success_url = reverse_lazy('ls-condition')
 
-class CollectDataDelete(DeleteView):
+class CollectDataDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = CollectData
     title = 'ExamsResult'
     template_name = 'ex-form.html'
     success_url = reverse_lazy('ls-collectdata')
 
-class HRVTimeDelete(DeleteView):
+class HRVTimeDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = HRVTime
     template_name = 'ex-form.html'
     success_url = reverse_lazy('ls-hrvtime')
 
-class HRVFreqDelete(DeleteView):
+class HRVFreqDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = HRVFreq
     title = 'ExamsResult'
     template_name = 'ex-form.html'
     success_url = reverse_lazy('ls-hrvfreq')
 
-class HRVNonLinearDelete(DeleteView):
+class HRVNonLinearDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = HRVNonLinear
     template_name = 'ex-form.html'
     success_url = reverse_lazy('ls-hrvnonlin')
 
 
-
-    
-
-
 ############################ LIST ############################
 
-
-class PatientList(SuccessMessageMixin, ListView):
+class PatientList( LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Patient
-    title = 'ExamsResult'
+    title = 'Patient'
     template_name = 'patient.html'
     sucess_message = 'New Patient added sucessfully'
+    paginate_by = 10
 
+    def get_queryset(self):
 
-class MedicineList(ListView):
+        search = self.request.GET.get('initials')
+
+        if search:
+            patients = Patient.objects.filter(initials=search)
+        else:
+            patients = Patient.objects.all()
+
+        return patients
+
+class MedicineList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Medicine
-    title = 'ExamsResult'
+    title = 'Medicine'
     template_name = 'medicine.html'
     sucess_message = 'New Medicine added sucessfully'
+    paginate_by = 10
 
-
-class ExamsResultList(ListView):
+class ExamsResultList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = ExamsResult
     title = 'ExamsResult'
     template_name = 'examsresult.html'
+    paginate_by = 10
 
-
-class ConditionList(ListView):
+class ConditionList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Condition
-    title = 'ExamsResult'
+    title = 'Condition'
     template_name = 'condition.html'
+    paginate_by = 10
 
-
-class CollectDataList(ListView):
+class CollectDataList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = CollectData
-    title = 'ExamsResult'
+    title = 'CollectData'
     template_name = 'collectdata.html'
+    paginate_by = 10
 
-class HRVTimeList(ListView):
+class HRVTimeList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = HRVTime
-    title = 'ExamsResult'
+    title = 'HRVTime'
     template_name = 'hrvtime.html'
+    paginate_by = 10
 
-
-class HRVFreqList(ListView):
+class HRVFreqList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = HRVFreq
-    title = 'ExamsResult'
+    title = 'HRVFreq'
     template_name = 'hrvfreq.html'
+    paginate_by = 10
 
-
-class HRVNonLinearList(ListView):
+class HRVNonLinearList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = HRVNonLinear
-    title = 'ExamsResult'
+    title = 'HRVNonLinear'
     template_name = 'hrvnonlin.html'
-
+    paginate_by = 10
 
 
 

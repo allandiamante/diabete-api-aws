@@ -9,20 +9,59 @@
 
 {% block mid-content %}
 
-            <h3>{{ title }}</h3>
-            <h3>
-                Fill in all required fields
-            </h3>
-            <hr>
+    <h3>{{ title }}</h3>
+    <h3>
+        Fill in all required fields
+    </h3>
+    <hr>
 
-            <form action="" method="POST">
+    <form action="" method="POST">
 
-                {% csrf_token %}
-                {{ form|crispy }}
-                <hr>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" >Register</button>
-                </div>
-                <hr>
-            </form>
-            {% endblock %}
+        {% csrf_token %}
+        {{ form|crispy }}
+        <hr>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" >Register</button>
+        </div>
+        <hr>
+    </form>
+    
+{% endblock %}
+
+{% block scripts %}
+
+
+<script>
+    $("#div_id_type_dm").prop("hidden", true);
+    $("#div_id_age_dm_diagnosis").prop("hidden", true);
+    $("#div_id_dm_duration").prop("hidden", true);
+    $("#div_id_hipo_mes").prop("hidden", true);
+    $("#div_id_internacao_dm").prop("hidden", true);
+
+    $(document).ready(function() {
+        $("#id_dm").click(function (){
+                    // habilita o campo 
+                    // alert($("#id_dm").val() == 'on')
+                if($("#id_dm").is(":checked") )
+                {
+                    
+                    $("#div_id_type_dm").prop("hidden", false);
+                    $("#div_id_age_dm_diagnosis").prop("hidden", false);
+                    $("#div_id_dm_duration").prop("hidden", false);
+                    $("#div_id_hipo_mes").prop("hidden", false);
+                    $("#div_id_internacao_dm").prop("hidden", false);
+                   
+            }
+                else{
+                    $("#div_id_type_dm").prop("hidden", true);
+                    $("#div_id_age_dm_diagnosis").prop("hidden", true);
+                    $("#div_id_dm_duration").prop("hidden", true);
+                    $("#div_id_hipo_mes").prop("hidden", true);
+                    $("#div_id_internacao_dm").prop("hidden", true);
+                }
+
+        });
+    });
+
+</script>
+{% endblock %}

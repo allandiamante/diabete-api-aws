@@ -51,10 +51,12 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth.registration',
-    'userapp',
-    'patient',
     'crispy_forms',
+    #aplication
+    'patient',
+    'django_cleanup.apps.CleanupConfig',
     'usersmed.apps.UsersmedConfig',
+    'userapp',
 
 ]
 
@@ -217,7 +219,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'default from email'
 
 
-MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT= os.path.join(BASE_DIR, 'media')
 MEDIA_URL= "/media/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
