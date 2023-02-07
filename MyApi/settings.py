@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'crispy_forms',
+
     #aplication
     'patient',
     'django_cleanup.apps.CleanupConfig',

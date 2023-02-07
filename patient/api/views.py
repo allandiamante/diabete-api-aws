@@ -107,7 +107,7 @@ class MedicinesViewSet(viewsets.ModelViewSet):
               rosuvas_mg=data["rosuvas_mg"], losartan_mg=data["losartan_mg"], enalapril_mg=data["enalapril_mg"],
                quetiapina_mg=data["quetiapina_mg"], venlafaxina_mg=data["venlafaxina_mg"], omeprazol_mg=data["omeprazol_mg"],
                 ranitidina_mg=data["ranitidina_mg"], carbamazpn_mg=data["carbamazpn_mg"], anticoncepcional=data["anticoncepcional"],
-                 ass_mg=data["ass_mg"], lt4_mg=data["lt4_mg"], mtf_mg=data["mtf_mg"])
+                 aas_mg=data["aas_mg"], lt4_mg=data["lt4_mg"], mtf_mg=data["mtf_mg"])
 
         new_medicines.save() 
         serializer = MedicinesSerializer(new_medicines)

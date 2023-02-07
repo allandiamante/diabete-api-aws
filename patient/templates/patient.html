@@ -11,8 +11,15 @@
 <p class="lead">Here you will be able to edit and delete patient</p>
 <a href="{% url 'patient' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a Patient</a>
 <hr>
-    <form action="?" method="GET">
+    <!-- <form action="?" method="GET">
         <input type="text" name="initials" id="" value="{{ request.GET.initials }}" class="p-1 border" autocomplete="off" placeholder="Initials Patient">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="{% url 'ls-patient' %}" class="btn btn-light">Clean</a>
+    </form> -->
+
+    
+    <form action="?" method="GET">
+        <input type="text" name="id" id="" value="{{ request.GET.id }}" class="p-1 border" autocomplete="off" placeholder="Patient ID">
         <button type="submit" class="btn btn-primary">Search</button>
         <a href="{% url 'ls-patient' %}" class="btn btn-light">Clean</a>
     </form>
@@ -21,7 +28,7 @@
 <table class="table table-striped">
     <tr>
         <th>ID</th>
-        <th>Name</th>
+        <th>Age</th>
         <th>Initials</th>
         <th>Options</th>
     </tr>
@@ -29,7 +36,7 @@
     {% for patient in object_list %}
     <tr>
         <td>{{ patient.id }}</td>
-        <td>{{ patient.subject_name }}</td>
+        <td>{{ patient.age }}</td>
         <td>{{ patient.initials }}</td>
         <td>
             <a href="{% url 'ed-patient' patient.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
@@ -47,8 +54,10 @@
     {% if page_obj.has_previous %}
 
         {% if request.GET.initials %}
+        <li class="page-item">    <a class="page-link" href="?page=1&initials={{request.GET.initials}}"><strong>First</strong></a></li>
         <li class="page-item">    <a class="page-link" href="?page={{page_obj.previous_page_number}}&initials={{request.GET.initials}}"><strong>Back</strong></a></li>
         {% else %}
+        <li class="page-item">    <a class="page-link" href="?page=1"><strong>First</strong></a></li>
         <li class="page-item">    <a class="page-link" href="?page={{page_obj.previous_page_number}}"><strong>Back</strong></a></li>
         {% endif %}
     {% endif %}
@@ -60,8 +69,10 @@
     {% if page_obj.has_next %}
         {% if request.GET.initials %}
         <li class="page-item">    <a class="page-link" href="?page={{page_obj.next_page_number}}&initials={{request.GET.initials}}"><strong>Next</strong></a></li>
+        <li class="page-item">    <a class="page-link" href="?page={{page_obj.paginator.num_pages}}&initials={{request.GET.initials}}"><strong>Last</strong></a></li>
         {% else %}
         <li class="page-item">    <a class="page-link" href="?page={{page_obj.next_page_number}}"><strong>Next</strong></a></li>
+        <li class="page-item">    <a class="page-link" href="?page={{page_obj.paginator.num_pages}}"><strong>Last</strong></a></li>
 
         {% endif %}
     {% endif %}

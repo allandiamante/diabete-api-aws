@@ -16,7 +16,6 @@ def ret_initials(subject_name):
     initials = ''
     for i in subject_name:
         initials = initials + i[0].upper()
-    print(initials)
     return initials
 
 def calc_bmi(weight, height):
@@ -37,8 +36,7 @@ def calc_bsa(weight, height):
 
 #pensar saida caso não inserida no formulario os parametros de entradas, ja q eles não sao obrigatorio
 def calc_sbp_dbp(empe, repous):
-    if(empe or repous !=  None):     
-        print(empe - repous)
+    if(empe or repous !=  None):
         return (empe - repous)
     else: 
         return 0
@@ -77,7 +75,6 @@ class PatientCreate(LoginRequiredMixin, CreateView):
         self.object.initials = ret_initials(self.object.subject_name)
         self.object.bmi = calc_bmi(self.object.weight, self.object.height)
         self.object.bsa = calc_bsa(self.object.weight, self.object.height)
-        print(self.object.sbp_empe, self.object.sbp_repous)
         self.object.sbp_change = calc_sbp_dbp(self.object.sbp_empe, self.object.sbp_repous)
         self.object.dbp_change = calc_sbp_dbp(self.object.dbp_empe, self.object.dbp_repous)
         self.object.postural_drop = calc_postural_drop(self.object.sbp_change, self.object.dbp_change)
@@ -96,7 +93,7 @@ class MedicineCreate(LoginRequiredMixin, CreateView):
     'sinvas_mg', 'atorvas_mg','rosuvas_mg', 'losartan_mg', 
     'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
         'omeprazol_mg', 'ranitidina_mg', 'carbamazpn_mg',
-        'anticoncepcional', 'ass_mg', 'lt4_mg', 'collected_data',
+        'anticoncepcional', 'aas_mg', 'lt4_mg', 'collected_data',
         'mtf_mg']
     success_url = reverse_lazy('ls-medicine')
 
@@ -216,7 +213,6 @@ class PatientUpdate( LoginRequiredMixin, UpdateView):
             self.object.initials = ret_initials(self.object.subject_name)
             self.object.bmi = calc_bmi(self.object.weight, self.object.height)
             self.object.bsa = calc_bsa(self.object.weight, self.object.height)
-            print(self.object.sbp_empe, self.object.sbp_repous)
             self.object.sbp_change = calc_sbp_dbp(self.object.sbp_empe, self.object.sbp_repous)
             self.object.dbp_change = calc_sbp_dbp(self.object.dbp_empe, self.object.dbp_repous)
             self.object.postural_drop = calc_postural_drop(self.object.sbp_change, self.object.dbp_change)
@@ -235,7 +231,7 @@ class MedicineUpdate(LoginRequiredMixin, UpdateView):
     'sinvas_mg', 'atorvas_mg','rosuvas_mg', 'losartan_mg', 
     'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
         'omeprazol_mg', 'ranitidina_mg', 'carbamazpn_mg',
-        'anticoncepcional', 'ass_mg', 'lt4_mg', 'collected_data',
+        'anticoncepcional', 'aas_mg', 'lt4_mg', 'collected_data',
         'mtf_mg']
     success_url = reverse_lazy('ls-medicine')
     sucess_message = 'New Medicine added sucessfully'
@@ -391,7 +387,7 @@ class HRVNonLinearDelete(LoginRequiredMixin, DeleteView):
 
 class PatientList( LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
-    model = Patient
+    model = Patient, CollectData
     title = 'Patient'
     template_name = 'patient.html'
     sucess_message = 'New Patient added sucessfully'
@@ -399,10 +395,10 @@ class PatientList( LoginRequiredMixin, ListView):
 
     def get_queryset(self):
 
-        search = self.request.GET.get('initials')
+        search = self.request.GET.get('id')
 
         if search:
-            patients = Patient.objects.filter(initials=search)
+            patients = Patient.objects.filter(id=search)
         else:
             patients = Patient.objects.all()
 
@@ -416,12 +412,35 @@ class MedicineList(LoginRequiredMixin, ListView):
     sucess_message = 'New Medicine added sucessfully'
     paginate_by = 10
 
+
+    def get_queryset(self):
+
+        search = self.request.GET.get('id')
+
+        if search:
+            medicines = Medicine.objects.filter(id=search)
+        else:
+            medicines = Medicine.objects.all()
+
+        return medicines
+
 class ExamsResultList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = ExamsResult
     title = 'ExamsResult'
     template_name = 'examsresult.html'
     paginate_by = 10
+
+    def get_queryset(self):
+
+        search = self.request.GET.get('id')
+
+        if search:
+            exams_results = ExamsResult.objects.filter(id=search)
+        else:
+            exams_results = ExamsResult.objects.all()
+
+        return exams_results
 
 class ConditionList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
@@ -430,6 +449,18 @@ class ConditionList(LoginRequiredMixin, ListView):
     template_name = 'condition.html'
     paginate_by = 10
 
+
+    def get_queryset(self):
+
+        search = self.request.GET.get('id')
+
+        if search:
+            conditions = Condition.objects.filter(id=search)
+        else:
+            conditions = Condition.objects.all()
+
+        return conditions
+
 class CollectDataList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = CollectData
@@ -437,12 +468,34 @@ class CollectDataList(LoginRequiredMixin, ListView):
     template_name = 'collectdata.html'
     paginate_by = 10
 
+    def get_queryset(self):
+
+        search = self.request.GET.get('id')
+
+        if search:
+            collect_datas = CollectData.objects.filter(id=search)
+        else:
+            collect_datas = CollectData.objects.all()
+
+        return collect_datas
+        
 class HRVTimeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = HRVTime
     title = 'HRVTime'
     template_name = 'hrvtime.html'
     paginate_by = 10
+
+    def get_queryset(self):
+
+        search = self.request.GET.get('id')
+
+        if search:
+            hrv_times = HRVTime.objects.filter(id=search)
+        else:
+            hrv_times = HRVTime.objects.all()
+
+        return hrv_times
 
 class HRVFreqList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
@@ -451,6 +504,17 @@ class HRVFreqList(LoginRequiredMixin, ListView):
     template_name = 'hrvfreq.html'
     paginate_by = 10
 
+    def get_queryset(self):
+
+        search = self.request.GET.get('id')
+
+        if search:
+            hrv_freqs = HRVFreq.objects.filter(id=search)
+        else:
+            hrv_freqs = HRVFreq.objects.all()
+
+        return hrv_freqs
+
 class HRVNonLinearList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = HRVNonLinear
@@ -458,6 +522,15 @@ class HRVNonLinearList(LoginRequiredMixin, ListView):
     template_name = 'hrvnonlin.html'
     paginate_by = 10
 
+    def get_queryset(self):
 
+        search = self.request.GET.get('id')
+
+        if search:
+            hrv_nonlinears = HRVNonLinear.objects.filter(id=search)
+        else:
+            hrv_nonlinears = HRVNonLinear.objects.all()
+
+        return hrv_nonlinears
 
     

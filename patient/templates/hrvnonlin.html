@@ -12,6 +12,12 @@
 <p class="lead">Here you will be able to edit and delete HRV Non Linear</p>
 <a href="{% url 'hrvnonlin' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a HRV Non Linear</a>
 <hr>
+<form action="?" method="GET">
+    <input type="text" name="id" id="" value="{{ request.GET.id }}" class="p-1 border" autocomplete="off" placeholder="HRV Non Linear ID">
+    <button type="submit" class="btn btn-primary">Search</button>
+    <a href="{% url 'ls-hrvnonlin' %}" class="btn btn-light">Clean</a>
+</form>
+<hr>
 <div class="table-responsive">
 <table class="table table-striped">
     <tr>
