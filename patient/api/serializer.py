@@ -2,6 +2,7 @@ from rest_framework import serializers
 from patient.models import Patient, Medicine, ExamsResult, CollectData, Condition, HRVTime, HRVFreq, HRVNonLinear
 
 
+
 class PatientsSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -28,7 +29,7 @@ class MedicinesSerializer(serializers.ModelSerializer):
         'sinvas_mg', 'atorvas_mg','rosuvas_mg', 'losartan_mg', 
         'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
          'omeprazol_mg', 'ranitidina_mg', 'carbamazpn_mg',
-         'anticoncepcional', 'ass_mg', 'lt4_mg', 'collected_data',
+         'anticoncepcional', 'aas_mg', 'lt4_mg', 'collected_data',
           'mtf_mg', 'observations']
 
 class ExamsResultsSerializer(serializers.ModelSerializer):
@@ -48,7 +49,7 @@ class CollectDataSerializer(serializers.ModelSerializer):
         model = CollectData
         fields = [ 'id', 'patient_data','study', 'ecg', 
         'ppg', 'abp', 'emg', 'abspathrecord_times', 'sampling_freq_hz',
-         'device', 'observations', 'ecg_signal']
+         'device', 'observations', 'ecg_signal',  'collected_data']
 
 class ConditionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,7 +81,6 @@ class HRVFreqSerializer(serializers.ModelSerializer):
         'ulf_welch', 'vlf_welch', 'lf_welch',
         'hf_welch', 'ttlpwr_welch', 'lfhf_welch', 'power_vlf_welch',
         'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch']
-
 
 class HRVNonLinearSerializer(serializers.ModelSerializer):
     class Meta:

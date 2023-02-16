@@ -1,11 +1,13 @@
 from django.conf.urls import url, include
+from django.urls import path
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from .views import PatientsViewSet, PrototipePatientsViewSet, MedicinesViewSet, ExamsResultsViewSet, CollectDataViewSet, ConditionsViewSet, HRVTimeViewSet, HRVFreqViewSet, HRVNonLinearViewSet
 from rest_framework.routers import DefaultRouter
-
+from rest_framework.documentation import include_docs_urls
 
 router = DefaultRouter()
+#router.register("prototipepatient", PrototipePatientsViewSet, basename="prototipepatient")
 router.register("patient", PatientsViewSet, basename="patient")
-router.register("prototipepatient", PrototipePatientsViewSet, basename="prototipepatient")
 router.register("medicine", MedicinesViewSet, basename="medicine")
 router.register("examsresult", ExamsResultsViewSet, basename="examsresult")
 router.register("collectdata", CollectDataViewSet, basename="collectdata")
@@ -16,5 +18,9 @@ router.register("hrvnonlin", HRVNonLinearViewSet, basename="hrvnonlin")
 
 
 urlpatterns = [
-    url('', include(router.urls))
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('doc/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc-ui'),
+    url('', include(router.urls)),
 ]
+

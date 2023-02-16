@@ -5,6 +5,8 @@ from smart_selects.db_fields import ChainedForeignKey
 from django.utils import timezone
 from django.contrib import admin
 from django.urls import reverse
+from drf_spectacular.utils import extend_schema, extend_schema_view
+
 
 #criar uma choice box dynamic para study_choices tabela CollectData ATENÇÃO
 #criar uma choice box dynamic para device_choices tabela CollectData ATENÇÃO
@@ -19,11 +21,6 @@ DM_CHOICES = (
         ( 1, 'Type 1'),
         ( 2, 'Type 2'),
         ( 3, 'Type 3 Gestational'),
-    )
-
-STUDY_CHOICES = (
-        ( 1, 'DOC_SC'),
-        ( 2, 'Extra_data_Prof_jan22'),
     )
 
 DEVICE_CHOICES = (
@@ -69,7 +66,7 @@ class Patient(models.Model):
   gender = models.PositiveSmallIntegerField(verbose_name="Gender", validators=[MinValueValidator(1), MaxValueValidator(2)], choices=GENDER_CHOICES) 
   weight = models.FloatField(verbose_name="Weight (kg)", help_text = "EX: 65,5", validators=[MinValueValidator(0.0), MaxValueValidator(400.0)])
   height = models.FloatField(verbose_name="Height (m)",  help_text = "EX: 1,82", validators=[MinValueValidator(0), MaxValueValidator(4)])
-  phone = models.CharField(verbose_name="Phone", max_length=15, blank=True , help_text = "(DDD) 9 9999-9999")
+  phone = models.CharField(verbose_name="Phone", max_length=15, blank=True )
   state = models.CharField(verbose_name="State", max_length=2, choices = STATES_CHOICES, blank=True)
   city = models.CharField(verbose_name="City", max_length=100, blank=True)
   bmi = models.FloatField(verbose_name="BMI",  validators=[MinValueValidator(0.0), MaxValueValidator(450.0)], default=0.0) #Variavel calculada 
@@ -78,7 +75,7 @@ class Patient(models.Model):
   alcohol = models.BooleanField(verbose_name="Alcohol", default=False)
   physical_activity = models.PositiveSmallIntegerField(verbose_name="Physical Activity", validators=[MinValueValidator(0), MaxValueValidator(10)], blank=True, default=0) 
   dm = models.BooleanField(verbose_name="DM", default=False)# habilitar a partir da relação Dm
-  type_dm = models.PositiveSmallIntegerField(verbose_name="Type DM", validators=[MinValueValidator(1), MaxValueValidator(3)], choices=DM_CHOICES,default=0)# habilitar a partir da relação Dm
+  type_dm = models.PositiveSmallIntegerField(verbose_name="Type DM", validators=[MinValueValidator(0), MaxValueValidator(3)], choices=DM_CHOICES,default=0)# habilitar a partir da relação Dm
   age_dm_diagnosis = models.PositiveSmallIntegerField(verbose_name="Age DM Diagnosis", validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)# habilitar a partir da relação Dm
   dm_duration = models.PositiveSmallIntegerField(verbose_name="DM Duration", validators=[MinValueValidator(0), MaxValueValidator(1000)],default=0)# habilitar a partir da relação Dm
   hipo_mes = models.SmallIntegerField(verbose_name="Hipo Mes", default=0)# habilitar a partir da relação Dm
@@ -103,6 +100,8 @@ class Patient(models.Model):
   def __str__(self):
     #return "[Paciente Iniciais: " + self.initials + " | "  + "Paciente ID: " + str(self.id)+ "]"
     return "Patient ID: " + str(self.id)
+
+
 
   def get_absolute_url(self):
     return reverse('patient')  
@@ -186,10 +185,17 @@ class Condition(models.Model):
     #return "[Paciente ID: " + str(self.patient_conditions.id) + " | "  + "Condições ID: " + str(self.id)+ "]"
     return "Condition ID: " + str(self.id)
 
+class Study(models.Model):
+  collected_data = models.DateTimeField(verbose_name="Collected Data", default=timezone.now) #será uma classe futuramente, não ha necessidade
+  name_study = models.CharField(verbose_name="Study Name", max_length=200 )
+
+  def __str__(self):
+    return self.name_study
+
 class CollectData(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data", default=timezone.now) #será uma classe futuramente, não ha necessidade
   patient_data = models.ForeignKey(Patient, verbose_name="Patient Data",  on_delete=models.CASCADE)
-  study = models.PositiveSmallIntegerField(verbose_name="Study", validators=[MinValueValidator(1), MaxValueValidator(10)], choices=STUDY_CHOICES)
+  study = models.ForeignKey(Study, verbose_name="Study",  on_delete=models.CASCADE)
   ecg = models.BooleanField(verbose_name="ECG", default=False,  blank=True, null=True)
   ppg = models.BooleanField(verbose_name="PPG", default=False,  blank=True, null=True)
   abp = models.BooleanField(verbose_name="ABP", default=False,  blank=True, null=True)

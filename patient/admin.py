@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Patient, Medicine,ExamsResult, CollectData, Condition, HRVTime, HRVFreq, HRVNonLinear
+from .models import Patient, Medicine,ExamsResult, CollectData, Condition, HRVTime, HRVFreq, HRVNonLinear, Study
 
 #from ./api/serializer import PatientsSerializer
 
@@ -65,6 +65,12 @@ class MedicinesAdmin(admin.ModelAdmin):
     list_display = ('id' , 'patient_medicines')
     search_fields = ('id',)
 
+class StudyAdmin(admin.ModelAdmin):
+    #fieldsets = [('Text', {'fields': ['patient_medicines']})]
+    list_display = ('id' , 'name_study')
+    search_fields = ('id',)
+
+
 class ExamsResultsAdmin(admin.ModelAdmin):
     list_display = ('id' , 'patient_exams')
     search_fields = ('id',)    
@@ -97,3 +103,4 @@ admin.site.register(CollectData, CollectDataAdmin)
 admin.site.register(HRVTime, HRVTimeAdmin)
 admin.site.register(HRVFreq, HRVFreqAdmin )
 admin.site.register(HRVNonLinear, HRVNonLinearAdmin )
+admin.site.register(Study, StudyAdmin )

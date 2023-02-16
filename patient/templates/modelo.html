@@ -134,17 +134,17 @@
               </div>
               {% else %}
               <div class="dropdown show">
-              <a class="btn btn-secondary " href="/" >
+                <a class="btn btn-secondary " href="/api" >
+                  <i class="fa fa-home fa-sm"></i>
+                  API v1
+                </a>    
+              </div>      
+              <div class="dropdown show">
+              <a class="btn btn-secondary " href="/api/doc/" >
                 <i class="fa fa-home fa-sm"></i>
-                About
+                Documentation
               </a>      
             </div>  
-            <div class="dropdown show">
-              <a class="btn btn-secondary " href="/" >
-                <i class="fa fa-home fa-sm"></i>
-                API
-              </a>    
-            </div>      
               {% endif %}
 
             </div>    
@@ -189,17 +189,30 @@
 
 <main class="flex-shrink-0">
   <!-- FORMS --><br>
-  <div class="container">
-  {% block up-content %}
-    <h1 class="mt-5">Patient Mananger</h1>
-    <p class="lead"><strong>BY CHAT-GPT3:</strong> Welcome to our diabetes management patient API. With this tool, doctors and nurses can quickly access important information about their patients,
-       including medical history, test results, and treatment records. Additionally, the API also provides resources for managing appointments,
-        prescriptions, and diabetes risk alerts, allowing for better management and prevention of the disease. 
-        All of this to ensure that patients receive the best possible care.</p>
 
-    
-    {% endblock %}
-  </div>
+
+  <div class="container">
+
+    {% block up-content %}
+    <div class="row">
+     
+        <div class="col-8">
+          <h1 class="mt-5">Patient Mananger</h1>
+          <p class="lead">Welcome to the Patient Management Application for those with a propensity for diabetes.
+            This system was created as a requirement for the completion of the Bachelor of Computer Science
+              degree program at the State University of Maringá. The student responsible for the project
+              is Allan Diamante de Souza, under the guidance of Master Sandra Cossul and 
+              co-guidance of Doctor Heloise M. P. Teixeira.
+
+          {% comment %} <h2 class="mt-5">Objective</h2> {% endcomment %}
+          <p class="lead"> </p>          
+        </div>
+        <div class="col-4">
+          <img src="{% static './img/logo.png' %}" alt="My image">
+        </div>
+      </div>
+          {% endblock %}
+    </div>
 </main>
 
 <div class="container" id="id-container">

@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from patient.models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq, HRVNonLinear
+from patient.models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq, HRVNonLinear, Study
 from .serializer import PatientsSerializer, PrototipePatientsSerializer, MedicinesSerializer, ExamsResultsSerializer, CollectDataSerializer, ConditionsSerializer, HRVFreqSerializer, HRVTimeSerializer, HRVNonLinearSerializer
-
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
 #TIRAR DUVIDA
 #O "height" DEVE SER INT OU FLOAT
@@ -51,19 +51,22 @@ def calc_postural_drop(sbp_chambe, dbp_chambe):
         return False
 
 
-
-
+tags_1= []
+tags_1.append('Patient')
+@extend_schema(description ="TESTE", tags=tags_1, summary="test sum")
 class PatientsViewSet(viewsets.ModelViewSet):
-    serializer_class = PatientsSerializer
+    
+    serializer_class = PatientsSerializer   
+    
 
-
+    
     def get_queryset(self):
         patients = Patient.objects.all()
         return patients   
 
+    
     def create(self, request, *args, **kwargs):
         data = request.data
-
         new_patient = Patient.objects.create(
             subject_name=data["subject_name"], age=data['age'], 
             initials=ret_initials(data["subject_name"]), #Calculated   
@@ -83,14 +86,20 @@ class PatientsViewSet(viewsets.ModelViewSet):
                       brs_status=data["brs_status"], collected_data=data["collected_data"], observations=data["observations"])
     
         new_patient.save()  
-        serializer = PatientsSerializer(new_patient)
+        serializer = PatientsSerializer(new_patient)        
         return Response(serializer.data)
+
+        
+    
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['']
     #     return context
 
+tags_1= []
+tags_1.append('Medicine')
+@extend_schema(description ="TESTE", tags=tags_1,)
 class MedicinesViewSet(viewsets.ModelViewSet):
     serializer_class = MedicinesSerializer
 
@@ -113,6 +122,9 @@ class MedicinesViewSet(viewsets.ModelViewSet):
         serializer = MedicinesSerializer(new_medicines)
         return Response(serializer.data)
 
+tags_1= []
+tags_1.append('Exams Result')
+@extend_schema(description ="TESTE", tags=tags_1,)
 class ExamsResultsViewSet(viewsets.ModelViewSet):
     serializer_class = ExamsResultsSerializer
 
@@ -138,6 +150,9 @@ class ExamsResultsViewSet(viewsets.ModelViewSet):
         serializer = ExamsResultsSerializer(new_examsresults)
         return Response(serializer.data)
 
+tags_1= []
+tags_1.append('Condition')
+@extend_schema(description ="TESTE", tags=tags_1,)
 class ConditionsViewSet(viewsets.ModelViewSet):      
 
     serializer_class = ConditionsSerializer
@@ -160,6 +175,9 @@ class ConditionsViewSet(viewsets.ModelViewSet):
         serializer = ConditionsSerializer(new_conditions)
         return Response(serializer.data)
 
+tags_1= []
+tags_1.append('Collect Data')
+@extend_schema(description ="", tags=tags_1,)
 class CollectDataViewSet(viewsets.ModelViewSet):
     serializer_class = CollectDataSerializer
 
@@ -172,7 +190,7 @@ class CollectDataViewSet(viewsets.ModelViewSet):
         new_collectdata = CollectData.objects.create(
             collected_data=data["collected_data"],
             patient_data=Patient.objects.get(pk=int(data["patient_data"])),
-             study=data['study'], ecg=data["ecg"], ppg=data["ppg"], abp=data["abp"], emg = data["emg"], 
+             study=Study.objects.get(pk=int(data["study"])), ecg=data["ecg"], ppg=data["ppg"], abp=data["abp"], emg = data["emg"], 
               abspathrecord_times=data["abspathrecord_times"], sampling_freq_hz=data["sampling_freq_hz"],  ecg_signal=data["ecg_signal"],
                device=data["device"], observations=data["observations"])
 
@@ -180,6 +198,9 @@ class CollectDataViewSet(viewsets.ModelViewSet):
         serializer = CollectDataSerializer(new_collectdata)
         return Response(serializer.data)
 
+tags_1= []
+tags_1.append('HRV Time')
+@extend_schema(description ="TESTE", tags=tags_1,)
 class HRVTimeViewSet(viewsets.ModelViewSet):
     serializer_class = HRVTimeSerializer
 
@@ -203,6 +224,9 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
         serializer = HRVTimeSerializer(new_hrvtime)
         return Response(serializer.data)
 
+tags_1= []
+tags_1.append('HRV Frequence')
+@extend_schema(description ="TESTE", tags=tags_1,)
 class HRVFreqViewSet(viewsets.ModelViewSet):
     serializer_class = HRVFreqSerializer
 
@@ -233,6 +257,9 @@ class HRVFreqViewSet(viewsets.ModelViewSet):
         serializer = HRVFreqSerializer(new_hrvfreq)
         return Response(serializer.data)
 
+tags_1= []
+tags_1.append('HRV Non Linear')
+@extend_schema(description ="TESTE", tags=tags_1,)
 class HRVNonLinearViewSet(viewsets.ModelViewSet):
     serializer_class = HRVNonLinearSerializer
 
