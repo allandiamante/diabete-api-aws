@@ -1,8 +1,14 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
+#Modelos
 from patient.models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq, HRVNonLinear, Study
+#Serializadores
 from .serializer import PatientsSerializer, PrototipePatientsSerializer, MedicinesSerializer, ExamsResultsSerializer, CollectDataSerializer, ConditionsSerializer, HRVFreqSerializer, HRVTimeSerializer, HRVNonLinearSerializer
+#Swagger Informações
 from drf_spectacular.utils import extend_schema, extend_schema_view
+#Token Autenticador
+from rest_framework.permissions import IsAuthenticated
+
 
 #TIRAR DUVIDA
 #O "height" DEVE SER INT OU FLOAT
@@ -55,7 +61,9 @@ tags_1= []
 tags_1.append('Patient')
 @extend_schema(description ="TESTE", tags=tags_1, summary="test sum")
 class PatientsViewSet(viewsets.ModelViewSet):
-    
+    permission_classes = (IsAuthenticated,)
+
+
     serializer_class = PatientsSerializer   
     
 

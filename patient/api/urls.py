@@ -4,6 +4,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 from .views import PatientsViewSet, PrototipePatientsViewSet, MedicinesViewSet, ExamsResultsViewSet, CollectDataViewSet, ConditionsViewSet, HRVTimeViewSet, HRVFreqViewSet, HRVNonLinearViewSet
 from rest_framework.routers import DefaultRouter
 from rest_framework.documentation import include_docs_urls
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 router = DefaultRouter()
 #router.register("prototipepatient", PrototipePatientsViewSet, basename="prototipepatient")
@@ -21,6 +23,8 @@ urlpatterns = [
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('doc/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc-ui'),
+    path('token/', TokenObtainPairView.as_view()),
+    path('token/refresh', TokenRefreshView.as_view()),
     url('', include(router.urls)),
 ]
 
