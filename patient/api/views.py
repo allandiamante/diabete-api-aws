@@ -14,11 +14,6 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.permissions import IsAuthenticated
 from ..utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop, normalize_data
 
-#TIRAR DUVIDA
-#O "height" DEVE SER INT OU FLOAT
-#Como IBM será uma variavel calculada, deve-se tirar do formulário? * Tratar erros 
-#calcular initials
-
 
 tags_1= []
 tags_1.append('Patient')
