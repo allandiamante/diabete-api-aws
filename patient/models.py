@@ -329,35 +329,31 @@ class HRVNonLinear(models.Model):
     return "HRV Non Linear ID: " + str(self.id)
 
 
-  def normalize_data2(self, data):
+  def normalize_data(self, data):
     # Recupera os valores mínimos e máximos de cada campo numérico
     valores_min = []
     valores_max = []
 
-    for field in HRVNonLinear._meta.fields[3:]:
+    for field in HRVNonLinear._meta.fields[3:]:      
       valores_min.append(HRVNonLinear.objects.aggregate(Min(field.name)))
       valores_max.append(HRVNonLinear.objects.aggregate(Max(field.name)))
-        
-    # Normaliza os dados
+
     novo_item = {}
     for item in data:
-      # print('item')
-      # print(item)
+
       for field, valor in item.items():
-        print('field e valor')
-        print(field, valor)
+
         if field in HRVNonLinear.numeric_fields:
           valor_min = valores_min[HRVNonLinear.numeric_fields.index(field)][f"{field}__min"]
           valor_max = valores_max[HRVNonLinear.numeric_fields.index(field)][f"{field}__max"]
-          print('valor minimo')
-          print(valor_min)
-          print('valor maximo')
-          print(valor_max)
 
-          if valor_max == valor_min:
-            # Define o valor normalizado como 0 ou outro valor padrão.
-            novo_item[field + '_normalized'] = 0
+          if( valor != None):
+            if valor_max == valor_min:
+              # Define o valor normalizado como 0 ou outro valor padrão.
+              novo_item[field + '_normalized'] = 0
+            else:
+              # Normaliza o valor.
+              novo_item[field + '_normalized'] = (valor - valor_min) / (valor_max - valor_min)
           else:
-            # Normaliza o valor.
-            novo_item[field + '_normalized'] = (valor - valor_min) / (valor_max - valor_min)
+            novo_item[field + '_normalized'] = None
     return novo_item
