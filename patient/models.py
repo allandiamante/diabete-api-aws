@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Min, Max
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
 from smart_selects.db_fields import ChainedForeignKey
@@ -317,6 +318,46 @@ class HRVNonLinear(models.Model):
   mean_dr4 = models.FloatField(blank=True, null=True, verbose_name="Mean Dr4 (r = 60)")
   mean_dr5 = models.FloatField(blank=True, null=True, verbose_name="Mean Dr5 (r = 80)")
   
+  numeric_fields = [
+'sd1','sd2','sd1_sd2_ratio','ellipse_area','csi','cvi','alpha1','alpha2','d2_10','d2_20',
+'ent_aprox_1_01','ent_aprox_1_015','ent_aprox_1_02','ent_aprox_1_025','ent_aprox_2_01','ent_aprox_2_015','ent_aprox_2_02',
+'ent_aprox_2_025','ent_amostra_1','ent_amostra_2','ent_multiescala_e3','ent_multiescala_e5','ent_fuzzy','ent_shannon_1',
+'ent_shannon_2','ent_spectral','ent_permutation_1','norm_entropy','ent_permutation_2','ent_conditional','ent_corrected_cond',
+'ctm_r1','ctm_r2','ctm_r3','area_sodp_rr_log','area_sodp_rr','mean_dr1','mean_dr2','mean_dr3','mean_dr4','mean_dr5',]
   
   def __str__(self):
     return "HRV Non Linear ID: " + str(self.id)
+
+
+  def normalize_data2(self, data):
+    # Recupera os valores mínimos e máximos de cada campo numérico
+    valores_min = []
+    valores_max = []
+
+    for field in HRVNonLinear._meta.fields[3:]:
+      valores_min.append(HRVNonLinear.objects.aggregate(Min(field.name)))
+      valores_max.append(HRVNonLinear.objects.aggregate(Max(field.name)))
+        
+    # Normaliza os dados
+    novo_item = {}
+    for item in data:
+      # print('item')
+      # print(item)
+      for field, valor in item.items():
+        print('field e valor')
+        print(field, valor)
+        if field in HRVNonLinear.numeric_fields:
+          valor_min = valores_min[HRVNonLinear.numeric_fields.index(field)][f"{field}__min"]
+          valor_max = valores_max[HRVNonLinear.numeric_fields.index(field)][f"{field}__max"]
+          print('valor minimo')
+          print(valor_min)
+          print('valor maximo')
+          print(valor_max)
+
+          if valor_max == valor_min:
+            # Define o valor normalizado como 0 ou outro valor padrão.
+            novo_item[field + '_normalized'] = 0
+          else:
+            # Normaliza o valor.
+            novo_item[field + '_normalized'] = (valor - valor_min) / (valor_max - valor_min)
+    return novo_item

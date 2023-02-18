@@ -3,49 +3,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import  ListView
 from django.urls import reverse_lazy
 from .models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq, HRVNonLinear
-
+from .utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop, normalize_data
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# For atribute calculated
-def ret_initials(subject_name):  
-    remover_palavras  = ['da', 'de', 'do' ]
-    lista_frase = subject_name.split()
-    result = [palavra for palavra in lista_frase if palavra.lower() not in remover_palavras]
-    retorno = ' '.join(result)
-    subject_name = retorno.split(' ')
-    initials = ''
-    for i in subject_name:
-        initials = initials + i[0].upper()
-    return initials
-
-def calc_bmi(weight, height):
-    if(weight and height != 0):
-        return (weight / (height * height) )
-    else:
-        return 0 
-
-def calc_raiz_q(x):
-    return x ** (1/2)
-
-def calc_bsa(weight, height):
-    cm = 100
-    if(weight and height != 0):
-        return calc_raiz_q((height * cm ) * weight / 3600)
-    else:
-        return 0 
-
-#pensar saida caso não inserida no formulario os parametros de entradas, ja q eles não sao obrigatorio
-def calc_sbp_dbp(empe, repous):
-    if(empe or repous !=  None):
-        return (empe - repous)
-    else: 
-        return 0
-
-def calc_postural_drop(sbp_change, dbp_change):
-    if(sbp_change > 20 or dbp_change > 10):
-        return True
-    else:
-        return False
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -59,13 +19,13 @@ class PatientCreate(LoginRequiredMixin, CreateView):
     model = Patient
     title = 'Register Patient'
     template_name = 'form.html'
-    fields = ['subject_name', 'age', 'gender', 'weight', 'height', 'phone',
+    fields = ['collected_data','subject_name', 'age', 'gender', 'weight', 'height', 'phone',
             'state', 'city', 'smoker', 'alcohol',
             'physical_activity', 'dm', 'type_dm', 'age_dm_diagnosis', 
             'dm_duration', 'hipo_mes', 'internacao_dm', 'sbp_repous',
             'dbp_repous', 'sbp_empe', 'dbp_empe', 'mean_hr', 'rr_resting', 
             'rr_db', 'rr_valsalva', 'rr_standing', 'obrienc_cs', 
-            'can_status', 'brs_status', 'collected_data', 'observations']
+            'can_status', 'brs_status',  'observations']
    
     success_url = reverse_lazy('ls-patient')
 
@@ -89,11 +49,11 @@ class MedicineCreate(LoginRequiredMixin, CreateView):
     model = Medicine
     title = 'Register Medicine'
     template_name = 'form.html'
-    fields = [ 'patient_medicines','insulin', 'ace_arb', 
+    fields = [ 'collected_data','patient_medicines','insulin', 'ace_arb', 
     'sinvas_mg', 'atorvas_mg','rosuvas_mg', 'losartan_mg', 
     'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
         'omeprazol_mg', 'ranitidina_mg', 'carbamazpn_mg',
-        'anticoncepcional', 'aas_mg', 'lt4_mg', 'collected_data',
+        'anticoncepcional', 'aas_mg', 'lt4_mg', 
         'mtf_mg']
     success_url = reverse_lazy('ls-medicine')
 
@@ -103,7 +63,7 @@ class ExamsResultCreate(LoginRequiredMixin, CreateView):
     model = ExamsResult
     title = 'Register ExamsResult'
     template_name = 'form.html'
-    fields = [  'patient_exams','hba1c_percent', 
+    fields = [  'collected_data', 'patient_exams','hba1c_percent', 
     'hba1c_mmol_mol', 'hb_g_dl', 'glicemia_mg_dl',
     'glicemia_mmol_l', 'urine_albumina_mg_24h', 'microAlb',
         'creatina_mg_dl','creatina_umol_l', 'acr_alb_creat',
@@ -120,7 +80,7 @@ class ConditionCreate(LoginRequiredMixin, CreateView):
     model = Condition
     title = 'Register Condition'
     template_name = 'form.html'
-    fields = ['patient_conditions','drge', 'vitiligo', 
+    fields = ['collected_data','patient_conditions','drge', 'vitiligo', 
     'doenca_celiaca', 'doenca_pulmonar','ace_arb', 'tireoide', 
     'retinopathy', 'nephropathy','peripheral_neuropathy', 'pn_symptoms',
         'pn_signs' ]
@@ -132,7 +92,7 @@ class CollectDataCreate(LoginRequiredMixin, CreateView):
     model = CollectData
     title = 'Register CollectData'
     template_name = 'up-form.html'
-    fields = [ 'patient_data','study', 'ecg', 
+    fields = [ 'collected_data','patient_data','study', 'ecg', 
     'ppg', 'abp', 'emg', 'abspathrecord_times', 'sampling_freq_hz', 'ecg_signal',
         'device', 'observations']
     success_url = reverse_lazy('ls-collectdata')
@@ -143,7 +103,7 @@ class HRVTimeCreate(LoginRequiredMixin, CreateView):
     model = HRVTime
     title = 'Register HRVTime'
     template_name = 'form.html'
-    fields = [ 'collectdata_time','nn_mean', 
+    fields = [ 'collected_data', 'collectdata_time','nn_mean', 
     'nn_median', 'nn_mode', 'nn_variance',
     'nn_skew', 'nn_kurt', 'nn_iqr', 'sd_nn',
     'cv', 'rmssd', 'sdsd',
@@ -158,7 +118,7 @@ class HRVFreqCreate(LoginRequiredMixin, CreateView):
     model = HRVFreq
     title = 'Register HRVFreq'
     template_name = 'form.html'
-    fields = [ 'collectdata_freq','ulf_lomb_ms2', 
+    fields = [ 'collected_data','collectdata_freq','ulf_lomb_ms2', 
     'vlf_lomb_ms2', 'lf_lomb_ms2', 'hf_lomb_ms2',
     'ulf_lomb_log', 'vlf_lomb_log', 'lf_lomb_log', 'hf_lomb_log',
     'ttlpwr_lomb_ms2', 'lf_hf_lomb', 'power_vlf_lomb',
@@ -174,8 +134,8 @@ class HRVNonLinearCreate(LoginRequiredMixin, CreateView):
     model = HRVNonLinear
     title = 'Register HRVNonLinear'
     template_name = 'form.html'
-    fields = [  'collectdata_non_lin','sd1','sd2','sd1_sd2_ratio','ellipse_area','csi','cvi','alpha1',
-                'alpha2','d2_10','d2_20','ent_aprox_1_01','ent_aprox_1_015',
+    fields = [  'collected_data','collectdata_non_lin','sd1','sd2','sd1_sd2_ratio','ellipse_area','csi',
+                'cvi','alpha1','alpha2','d2_10','d2_20','ent_aprox_1_01','ent_aprox_1_015',
                 'ent_aprox_1_02','ent_aprox_1_025','ent_aprox_2_01','ent_aprox_2_015',
                 'ent_aprox_2_02','ent_aprox_2_025','ent_amostra_1','ent_amostra_2',
                 'ent_multiescala_e3','ent_multiescala_e5','ent_fuzzy','ent_shannon_1',
@@ -193,7 +153,7 @@ class PatientUpdate( LoginRequiredMixin, UpdateView):
     model = Patient
     title = 'ExamsResult'
     template_name = 'ed-form.html'
-    fields = ['subject_name', 'age', 
+    fields = ['collected_data', 'subject_name', 'age', 
             'gender', 'weight', 'height', 'phone',
             'state', 'city',  'smoker', 'alcohol', 
             'physical_activity', 'dm', 'type_dm', 'age_dm_diagnosis', 
@@ -201,7 +161,7 @@ class PatientUpdate( LoginRequiredMixin, UpdateView):
             'dbp_repous', 'sbp_empe', 'dbp_empe', 'sbp_change', 
             'dbp_change', 'postural_drop', 'mean_hr', 'rr_resting', 
             'rr_db', 'rr_valsalva', 'rr_standing', 'obrienc_cs', 
-            'can_status', 'brs_status', 'collected_data', 'observations']
+            'can_status', 'brs_status',  'observations']
     success_url = reverse_lazy('ls-patient')
     sucess_message = 'New Patient added sucessfully'
 
@@ -227,11 +187,11 @@ class MedicineUpdate(LoginRequiredMixin, UpdateView):
     model = Medicine
     title = 'ExamsResult'
     template_name = 'ed-form.html'
-    fields = [ 'patient_medicines','insulin', 'ace_arb', 
+    fields = [  'collected_data', 'patient_medicines','insulin', 'ace_arb', 
     'sinvas_mg', 'atorvas_mg','rosuvas_mg', 'losartan_mg', 
     'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
         'omeprazol_mg', 'ranitidina_mg', 'carbamazpn_mg',
-        'anticoncepcional', 'aas_mg', 'lt4_mg', 'collected_data',
+        'anticoncepcional', 'aas_mg', 'lt4_mg',
         'mtf_mg']
     success_url = reverse_lazy('ls-medicine')
     sucess_message = 'New Medicine added sucessfully'
@@ -242,7 +202,7 @@ class ExamsResultUpdate(LoginRequiredMixin, UpdateView):
     model = ExamsResult
     title = 'ExamsResult'
     template_name = 'ed-form.html'
-    fields = [  'patient_exams','hba1c_percent', 
+    fields = [   'collected_data','patient_exams','hba1c_percent', 
     'hba1c_mmol_mol', 'hb_g_dl', 'glicemia_mg_dl',
     'glicemia_mmol_l', 'urine_albumina_mg_24h', 'microAlb',
         'creatina_mg_dl','creatina_umol_l', 'acr_alb_creat',
@@ -258,7 +218,7 @@ class ConditionUpdate(LoginRequiredMixin, UpdateView):
     model = Condition
     title = 'ExamsResult'
     template_name = 'ed-form.html'
-    fields = ['patient_conditions','drge', 'vitiligo', 
+    fields = [ 'collected_data','patient_conditions','drge', 'vitiligo', 
     'doenca_celiaca', 'doenca_pulmonar','ace_arb', 'tireoide', 
     'retinopathy', 'nephropathy','peripheral_neuropathy', 'pn_symptoms',
         'pn_signs']
@@ -270,7 +230,7 @@ class CollectDataUpdate(LoginRequiredMixin, UpdateView):
     model = CollectData
     title = 'ExamsResult'
     template_name = 'ed-up-form.html'
-    fields = [ 'patient_data','study', 'ecg', 
+    fields = [  'collected_data','patient_data','study', 'ecg', 
     'ppg', 'abp', 'emg', 'abspathrecord_times', 'sampling_freq_hz','ecg_signal',
         'device', 'observations']
     success_url = reverse_lazy('ls-collectdata')
@@ -281,7 +241,7 @@ class HRVTimeUpdate(LoginRequiredMixin, UpdateView):
     model = HRVTime
     title = 'ExamsResult'
     template_name = 'ed-form.html'
-    fields = [ 'collectdata_time','nn_mean', 
+    fields = [  'collected_data','collectdata_time','nn_mean', 
     'nn_median', 'nn_mode', 'nn_variance',
     'nn_skew', 'nn_kurt', 'nn_iqr', 'sd_nn',
     'cv', 'rmssd', 'sdsd',
@@ -296,7 +256,7 @@ class HRVFreqUpdate(LoginRequiredMixin, UpdateView):
     model = HRVFreq
     title = 'ExamsResult'
     template_name = 'ed-form.html'
-    fields = [ 'collectdata_freq','ulf_lomb_ms2', 
+    fields = [  'collected_data','collectdata_freq','ulf_lomb_ms2', 
     'vlf_lomb_ms2', 'lf_lomb_ms2', 'hf_lomb_ms2',
     'ulf_lomb_log', 'vlf_lomb_log', 'lf_lomb_log', 'hf_lomb_log',
     'ttlpwr_lomb_ms2', 'lf_hf_lomb', 'power_vlf_lomb',
@@ -312,8 +272,8 @@ class HRVNonLinearUpdate(LoginRequiredMixin, UpdateView):
     model = HRVNonLinear
     title = 'ExamsResult'
     template_name = 'ed-form.html'
-    fields = [  'collectdata_non_lin','sd1','sd2','sd1_sd2_ratio','ellipse_area','csi','cvi','alpha1',
-                'alpha2','d2_10','d2_20','ent_aprox_1_01','ent_aprox_1_015',
+    fields = [   'collected_data','collectdata_non_lin','sd1','sd2','sd1_sd2_ratio','ellipse_area',
+                'csi','cvi','alpha1','alpha2','d2_10','d2_20','ent_aprox_1_01','ent_aprox_1_015',
                 'ent_aprox_1_02','ent_aprox_1_025','ent_aprox_2_01','ent_aprox_2_015',
                 'ent_aprox_2_02','ent_aprox_2_025','ent_amostra_1','ent_amostra_2',
                 'ent_multiescala_e3','ent_multiescala_e5','ent_fuzzy','ent_shannon_1',

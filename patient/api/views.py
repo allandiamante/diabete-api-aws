@@ -1,5 +1,8 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.db import models
+
 #Modelos
 from patient.models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq, HRVNonLinear, Study
 #Serializadores
@@ -8,60 +11,69 @@ from .serializer import PatientsSerializer, PrototipePatientsSerializer, Medicin
 from drf_spectacular.utils import extend_schema, extend_schema_view
 #Token Autenticador
 from rest_framework.permissions import IsAuthenticated
-
+from ..utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop, normalize_data
 
 #TIRAR DUVIDA
 #O "height" DEVE SER INT OU FLOAT
 #Como IBM será uma variavel calculada, deve-se tirar do formulário? * Tratar erros 
 #calcular initials
 
-def ret_initials(subject_name):  
-    remover_palavras  = ['da', 'de', 'do' ]
-    lista_frase = subject_name.split()
-    result = [palavra for palavra in lista_frase if palavra.lower() not in remover_palavras]
-    retorno = ' '.join(result)
-    subject_name = retorno.split(' ')
-    initials = ''
-    for i in subject_name:
-        initials = initials + i[0].upper()
-    print(initials)
-    return initials
+def normalize_data2(data):
+    # Recupera os valores mínimos e máximos de cada campo numérico
+    valores_min = []
+    valores_max = []
+    for field in HRVNonLinear._meta.fields[3:]:
+        valores_min.append(HRVNonLinear.objects.aggregate(Min(field.name)))
+        valores_max.append(HRVNonLinear.objects.aggregate(Max(field.name)))
+        
+    # Normaliza os dados
+    for item in data:
+        for field, valor in item.items():
+            if field in HRVNonLinear.numeric_fields:
+                valor_min = valores_min[HRVNonLinear.numeric_fields.index(field)][f"{field}__min"]
+                valor_max = valores_max[HRVNonLinear.numeric_fields.index(field)][f"{field}__max"]
+                item[field] = (valor - valor_min) / (valor_max - valor_min)
+                
+    return data 
 
-def calc_bmi(weight, height):
-    if(weight and height != 0):
-        return (weight / (height * height) )
-    else:
-        return 0 
-
-def calc_raiz_q(x):
-    return x ** (1/2)
-
-def calc_bsa(weight, height):
-    cm = 100
-    if(weight and height != 0):
-        return calc_raiz_q((height * cm ) * weight / 3600)
-    else:
-        return 0 
+def normalize_data(obj):
+    # obtém os valores mínimo e máximo para cada campo
+    # list_min = []
+    # list_max = []
+    # print("CAIU AQUI")
     
-#pensar saida caso não inserida no formulario os parametros de entradas, ja q eles não sao obrigatorio
-def calc_sbp_dbp(empe, repous):
-    if(empe or repous !=  None):            
-        return (empe - repous)
-    else: 
-        return 0
+    # for field in HRVNonLinear._meta.fields:
+    #     if(type(field) == models.FloatField):
+    #        list_min.append(Min(field))
+    #        list_max.append(Max(field))
 
-def calc_postural_drop(sbp_chambe, dbp_chambe):
-    if(sbp_chambe > 20 or dbp_chambe > 10):
-        return True
-    else:
-        return False
+    # print(list_min)
+    # print(list_max)
+    valores_min = []
+    valores_max = []
+    for field in HRVNonLinear._meta.fields[3:]:
+        valores_min.append(HRVNonLinear.objects.aggregate(Min(field.name)))
+        valores_max.append(HRVNonLinear.objects.aggregate(Max(field.name)))
+    # Normaliza os dados
+    for field in HRVNonLinear._meta.fields:
+        # obtém o valor atual do campo e o valor mínimo e máximo para normalização
+        valor_atual = getattr(obj[3:], field.name)
+        
+        # normaliza o valor do campo
+        valor_normalizado = (valor_atual - valores_min) / (valores_max - valores_min)
+        
+        # define o valor normalizado no novo objeto
+        setattr(obj_normalizado, field.name, valor_normalizado)
+
+    return obj_normalizado
+
 
 
 tags_1= []
 tags_1.append('Patient')
 @extend_schema(description ="TESTE", tags=tags_1, summary="test sum")
 class PatientsViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
 
     serializer_class = PatientsSerializer   
@@ -97,13 +109,6 @@ class PatientsViewSet(viewsets.ModelViewSet):
         serializer = PatientsSerializer(new_patient)        
         return Response(serializer.data)
 
-        
-    
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['']
-    #     return context
 
 tags_1= []
 tags_1.append('Medicine')
@@ -274,6 +279,16 @@ class HRVNonLinearViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         examsresults = HRVNonLinear.objects.all()
         return examsresults
+
+    @action(detail=True, methods=['get'])
+    def normalized_hrv(self, request, pk=None):
+        try:
+            if(HRVNonLinear.objects.filter(id=pk)):
+                dados_normalizados = HRVNonLinear.objects.filter(id=pk).values()
+                dados_normalizados = HRVNonLinear.normalize_data2(HRVNonLinear, list(dados_normalizados))    
+                return Response(dados_normalizados)
+        except KeyError:
+            return Response(print('A chave "chave_inexistente" não existe no dicionário.'))
 
     def create(self, request, *args, **kwargs):
         data = request.data
