@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import  ListView
 from django.urls import reverse_lazy
 from .models import Patient, Medicine, CollectData, ExamsResult, Condition, HRVTime, HRVFreq, HRVNonLinear
-from .utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop, normalize_data
+from .utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 

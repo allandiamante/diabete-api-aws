@@ -12,7 +12,7 @@ from .serializer import PatientsSerializer, PrototipePatientsSerializer, Medicin
 from drf_spectacular.utils import extend_schema, extend_schema_view
 #Token Autenticador
 from rest_framework.permissions import IsAuthenticated
-from ..utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop, normalize_data
+from ..utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop, normalize_datas
 
 
 tags_1= []
@@ -183,6 +183,23 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
         serializer = HRVTimeSerializer(new_hrvtime)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def normalized_hrv(self, request, pk=None):
+        if(HRVTime.objects.filter(id=pk)):
+            dados = HRVTime.objects.filter(id=pk).values()
+            dados_normalizados = HRVTime.normalize_data(HRVTime, list(dados))    
+            return Response(dados_normalizados)
+        else:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+    
+    @action(detail=False, methods=['get'])
+    def normalized_hrvs(self, request, pk=None):
+        if(HRVTime.objects.all() != 0):
+            dados_normalizados = normalize_datas(HRVTime)    
+            return Response(dados_normalizados)
+        else:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
 tags_1= []
 tags_1.append('HRV Frequence')
 @extend_schema(description ="TESTE", tags=tags_1,)
@@ -216,6 +233,23 @@ class HRVFreqViewSet(viewsets.ModelViewSet):
         serializer = HRVFreqSerializer(new_hrvfreq)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def normalized_hrv(self, request, pk=None):
+        if(HRVFreq.objects.filter(id=pk)):
+            dados = HRVFreq.objects.filter(id=pk).values()
+            dados_normalizados = HRVFreq.normalize_data(HRVFreq, list(dados))    
+            return Response(dados_normalizados)
+        else:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(detail=False, methods=['get'])
+    def normalized_hrvs(self, request, pk=None):
+        if(HRVFreq.objects.all() != 0):
+            dados_normalizados = normalize_datas(HRVFreq)    
+            return Response(dados_normalizados)
+        else:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
 tags_1= []
 tags_1.append('HRV Non Linear')
 @extend_schema(description ="TESTE", tags=tags_1,)
@@ -231,6 +265,15 @@ class HRVNonLinearViewSet(viewsets.ModelViewSet):
         if(HRVNonLinear.objects.filter(id=pk)):
             dados = HRVNonLinear.objects.filter(id=pk).values()
             dados_normalizados = HRVNonLinear.normalize_data(HRVNonLinear, list(dados))    
+            return Response(dados_normalizados)
+        else:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    
+    @action(detail=False, methods=['get'])
+    def normalized_hrvs(self, request, pk=None):
+        if(HRVNonLinear.objects.all() != 0):
+            dados_normalizados = normalize_datas(HRVNonLinear)    
             return Response(dados_normalizados)
         else:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)

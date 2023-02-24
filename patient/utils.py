@@ -1,3 +1,5 @@
+from patient.models import  HRVTime, HRVFreq, HRVNonLinear
+from django.db.models import Min, Max, Avg
 
 def ret_initials(subject_name):  
     remover_palavras  = ['da', 'de', 'do' ]
@@ -40,25 +42,47 @@ def calc_postural_drop(sbp_chambe, dbp_chambe):
     else:
         return False
 
-def normalize_data(obj):
-    # obtém os valores mínimo e máximo para cada campo
-    valores = MeuModelo.objects.aggregate(*[Min(field) for field in MeuModelo._meta.fields], *[Max(field) for field in MeuModelo._meta.fields])
-    
-    # cria um novo objeto normalizado
-    obj_normalizado = MeuModelo()
-    for field in MeuModelo._meta.fields:
-        # obtém o valor atual do campo e o valor mínimo e máximo para normalização
-        valor_atual = getattr(obj, field.name)
-        min_valor = valores[field.name + '__min']
-        max_valor = valores[field.name + '__max']
-        
-        # normaliza o valor do campo
-        valor_normalizado = (valor_atual - min_valor) / (max_valor - min_valor)
-        
-        # define o valor normalizado no novo objeto
-        setattr(obj_normalizado, field.name, valor_normalizado)
 
-    return obj_normalizado
+def normalize_datas(HRV):
+    # Recupera os valores mínimos e máximos de cada campo numérico
+    valores_min = []
+    valores_max = []
+    valores_avg = []
 
+    for field in HRV._meta.fields[3:]:      
+      valores_min.append(HRV.objects.aggregate(Min(field.name)))
+      valores_max.append(HRV.objects.aggregate(Max(field.name)))
+      valores_avg.append(HRV.objects.aggregate(Avg(field.name)))
 
-    
+    data = HRV.objects.all()
+    novos_itens = []
+    novo_item = {}
+    print(HRV._meta.fields[:3])
+    # print(len(data))
+    # print(data.values())
+    for item in data.values():
+      
+
+      for field, valor in item.items():
+        novo_item[field + '_normalized'] = valor
+
+        if field in HRV.numeric_fields:
+
+          valor_min = valores_min[HRV.numeric_fields.index(field)][f"{field}__min"]
+          valor_max = valores_max[HRV.numeric_fields.index(field)][f"{field}__max"]
+          valor_avg = valores_avg[HRV.numeric_fields.index(field)][f"{field}__avg"]
+
+          if( valor != None):
+            if valor_max == valor_min:
+              # Define o valor normalizado como 0 ou outro valor padrão.
+              novo_item[field + '_normalized'] = 0
+            else:
+              # Normaliza o valor.
+              novo_item[field + '_normalized'] = (valor - valor_min) / (valor_max - valor_min)
+          else:
+            if valor_max == valor_min:
+                novo_item[field + '_normalized'] = 0
+            else:            
+                novo_item[field + '_normalized'] = (valor_avg - valor_min) / (valor_max - valor_min)
+      novos_itens.append(novo_item.copy())
+    return novos_itens
