@@ -187,7 +187,7 @@ DATETIME_INPUT_FORMATS = ('%d/%m/%Y %H:%M:%S',)
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patient API',
-    'DESCRIPTION': "Documentation created from swagger 'drf-spectacular' for better understanding of Application Programming Interfacefor about management of patients prone to diabetes",
+    'DESCRIPTION': "Documentation created from swagger 'drf-spectacular' for better understanding of Application Programming Interfacefor about management of patients prone to diabetes.",
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 

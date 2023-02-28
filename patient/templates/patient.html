@@ -29,7 +29,7 @@
     <tr>
         <th>ID</th>
         <th>Age</th>
-        <th>Initials</th>
+        <th>Date of registration</th>
         <th>Options</th>
     </tr>
 
@@ -37,7 +37,7 @@
     <tr>
         <td>{{ patient.id }}</td>
         <td>{{ patient.age }}</td>
-        <td>{{ patient.initials }}</td>
+        <td>{{ patient.collected_data }}</td>
         <td>
             <a href="{% url 'ed-patient' patient.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
             <a href="{% url 'ex-patient' patient.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>

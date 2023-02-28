@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework import status  
 from django.db import models
 
@@ -14,10 +15,9 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.permissions import IsAuthenticated
 from ..utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, calc_postural_drop, normalize_datas
 
-
 tags_1= []
 tags_1.append('Patient')
-@extend_schema(description ="TESTE", tags=tags_1, summary="test sum")
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing patient data.", tags=tags_1, summary="test sum")
 class PatientsViewSet(viewsets.ModelViewSet):
     #permission_classes = (IsAuthenticated,)
 
@@ -58,7 +58,7 @@ class PatientsViewSet(viewsets.ModelViewSet):
 
 tags_1= []
 tags_1.append('Medicine')
-@extend_schema(description ="TESTE", tags=tags_1,)
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing patient medications", tags=tags_1,)
 class MedicinesViewSet(viewsets.ModelViewSet):
     serializer_class = MedicinesSerializer
 
@@ -83,7 +83,7 @@ class MedicinesViewSet(viewsets.ModelViewSet):
 
 tags_1= []
 tags_1.append('Exams Result')
-@extend_schema(description ="TESTE", tags=tags_1,)
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing patient exams results", tags=tags_1,)
 class ExamsResultsViewSet(viewsets.ModelViewSet):
     serializer_class = ExamsResultsSerializer
 
@@ -111,7 +111,7 @@ class ExamsResultsViewSet(viewsets.ModelViewSet):
 
 tags_1= []
 tags_1.append('Condition')
-@extend_schema(description ="TESTE", tags=tags_1,)
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing patient conditions", tags=tags_1,)
 class ConditionsViewSet(viewsets.ModelViewSet):      
 
     serializer_class = ConditionsSerializer
@@ -136,7 +136,7 @@ class ConditionsViewSet(viewsets.ModelViewSet):
 
 tags_1= []
 tags_1.append('Collect Data')
-@extend_schema(description ="", tags=tags_1,)
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing patient collected data.", tags=tags_1,)
 class CollectDataViewSet(viewsets.ModelViewSet):
     serializer_class = CollectDataSerializer
 
@@ -159,7 +159,7 @@ class CollectDataViewSet(viewsets.ModelViewSet):
 
 tags_1= []
 tags_1.append('HRV Time')
-@extend_schema(description ="TESTE", tags=tags_1,)
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Time data associated with patient collected data.", tags=tags_1,)
 class HRVTimeViewSet(viewsets.ModelViewSet):
     serializer_class = HRVTimeSerializer
 
@@ -194,7 +194,7 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def normalized_hrvs(self, request, pk=None):
-        if(HRVTime.objects.all() != 0):
+        if(len(HRVTime.objects.all()) != 0):
             dados_normalizados = normalize_datas(HRVTime)    
             return Response(dados_normalizados)
         else:
@@ -202,7 +202,7 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
 
 tags_1= []
 tags_1.append('HRV Frequence')
-@extend_schema(description ="TESTE", tags=tags_1,)
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Frequence data associated with patient collected data.", tags=tags_1,)
 class HRVFreqViewSet(viewsets.ModelViewSet):
     serializer_class = HRVFreqSerializer
 
@@ -244,7 +244,8 @@ class HRVFreqViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def normalized_hrvs(self, request, pk=None):
-        if(HRVFreq.objects.all() != 0):
+        print(len(HRVFreq.objects.all() ))
+        if(len(HRVFreq.objects.all()) != 0):
             dados_normalizados = normalize_datas(HRVFreq)    
             return Response(dados_normalizados)
         else:
@@ -252,7 +253,7 @@ class HRVFreqViewSet(viewsets.ModelViewSet):
 
 tags_1= []
 tags_1.append('HRV Non Linear')
-@extend_schema(description ="TESTE", tags=tags_1,)
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Non Linear data associated with patient collected data.", tags=tags_1,)
 class HRVNonLinearViewSet(viewsets.ModelViewSet):
     serializer_class = HRVNonLinearSerializer
 
@@ -272,7 +273,7 @@ class HRVNonLinearViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def normalized_hrvs(self, request, pk=None):
-        if(HRVNonLinear.objects.all() != 0):
+        if(len(HRVNonLinear.objects.all()) != 0):
             dados_normalizados = normalize_datas(HRVNonLinear)    
             return Response(dados_normalizados)
         else:

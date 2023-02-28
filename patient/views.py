@@ -7,8 +7,12 @@ from .utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp, 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
+
+
 class IndexView(TemplateView):
     template_name = 'index.html'
+
+
 
 
 
