@@ -22,8 +22,9 @@
 <table class="table table-striped">
     <tr>
         <th>HRV Time ID</th>
+        <th>Patient ID</th> 
         <th>Collect Data ID </th>
-        <th>Patient Initials</th>
+        <th>Date of registration</th>
         <th>Options</th>
     </tr>
 
@@ -31,7 +32,8 @@
     <tr>
         <td>{{ hrvtime.id }}</td>
         <td>{{ hrvtime.collectdata_time.id }}</td>
-        <td>{{ hrvtime.collectdata_time.patient_data.initials}}</td>
+        <td>{{ hrvtime.collectdata_time.patient_data.id }}</td>
+        <td>{{ hrvtime.collected_data}}</td>
         <td>
             <a href="{% url 'ed-hrvtime' hrvtime.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
             <a href="{% url 'ex-hrvtime' hrvtime.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
@@ -39,7 +41,7 @@
     </tr>
     {% empty %}
     <tr>
-        <td colspan="4"> Empty fields</td>
+        <td colspan="4"> HRV Time not found</td>
     </tr>
     {% endfor %}
 

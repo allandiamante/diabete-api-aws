@@ -161,6 +161,7 @@ tags_1= []
 tags_1.append('HRV Time')
 @extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Time data associated with patient collected data.", tags=tags_1,)
 class HRVTimeViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     serializer_class = HRVTimeSerializer
 
     def get_queryset(self):
@@ -201,8 +202,8 @@ class HRVTimeViewSet(viewsets.ModelViewSet):
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
 tags_1= []
-tags_1.append('HRV Frequence')
-@extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Frequence data associated with patient collected data.", tags=tags_1,)
+tags_1.append('HRV Frequency')
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Frequency data associated with patient collected data.", tags=tags_1,)
 class HRVFreqViewSet(viewsets.ModelViewSet):
     serializer_class = HRVFreqSerializer
 

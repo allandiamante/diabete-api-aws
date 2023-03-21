@@ -24,7 +24,7 @@
     <tr>
         <th>Med ID</th>
         <th>Patient ID</th>
-        <th>Patient Initials</th>
+        <th>Date of registration</th>
         <th>Options</th>
     </tr>
 
@@ -32,7 +32,7 @@
     <tr>
         <td>{{ medicine.id }}</td>
         <td>{{ medicine.patient_medicines.id }}</td>
-        <td>{{ medicine.patient_medicines.initials }}</td>
+        <td>{{ medicine.collected_data }}</td>
         <td>
             <a href="{% url 'ed-medicine' medicine.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
             <a href="{% url 'ex-medicine' medicine.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
@@ -40,7 +40,7 @@
     </tr>
     {% empty %}
     <tr>
-        <td colspan="4"> Empty fields</td>
+        <td colspan="4"> Medicine not found</td>
     </tr>
     {% endfor %}
 

@@ -55,8 +55,7 @@ STATES_CHOICES = (
   ("SC" , "Santa Catarina"),
   ("SP" , "São Paulo"),
   ("SE" , "Sergipe"),
-  ("TO" , "Tocantins")
-)
+  ("TO" , "Tocantins"))
 
 
 class Patient(models.Model):
@@ -109,7 +108,7 @@ class Patient(models.Model):
 
 class Medicine(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data",default=timezone.now)
-  patient_medicines = models.ForeignKey( Patient, on_delete=models.CASCADE, verbose_name="Patient Medicines")
+  patient_medicines = models.ForeignKey( Patient, on_delete=models.CASCADE, verbose_name="Patient ID")
   insulin = models.BooleanField(verbose_name="Insulin", default=False)
   ace_arb = models.BooleanField(verbose_name="Ace Arb", default=False)
   sinvas_mg = models.PositiveSmallIntegerField(verbose_name="Sinvas (Mg)", validators=[MinValueValidator(0), MaxValueValidator(1000)], blank=True, null=True)
@@ -137,7 +136,7 @@ class Medicine(models.Model):
 
 class ExamsResult(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data",default=timezone.now)
-  patient_exams = models.ForeignKey(Patient,verbose_name="Patient Exams", on_delete=models.CASCADE)
+  patient_exams = models.ForeignKey(Patient,verbose_name="Patient ID", on_delete=models.CASCADE)
   hba1c_percent = models.PositiveSmallIntegerField(verbose_name="HbA1c (%)", validators=[MinValueValidator(0), MaxValueValidator(1000)], null=True)
   hba1c_mmol_mol = models.PositiveSmallIntegerField(verbose_name="HbA1c (Mmol_Mol)", validators=[MinValueValidator(0), MaxValueValidator(1000)], blank=True, null=True) #calculado
   hb_g_dl = models.PositiveSmallIntegerField(verbose_name="Hb (g_dL)", validators=[MinValueValidator(0), MaxValueValidator(1000)], blank=True, null=True)
@@ -169,7 +168,7 @@ class ExamsResult(models.Model):
 
 class Condition(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data", default=timezone.now)
-  patient_conditions = models.OneToOneField(Patient, verbose_name="Patient Conditions",on_delete=models.CASCADE)
+  patient_conditions = models.OneToOneField(Patient, verbose_name="Patient ID",on_delete=models.CASCADE)
   drge = models.BooleanField(verbose_name="DRGE", default=False)
   vitiligo = models.BooleanField(verbose_name="Vitiligo", default=False)
   doenca_celiaca = models.BooleanField(verbose_name="Celiac Disease", default=False)
@@ -195,7 +194,7 @@ class Study(models.Model):
 
 class CollectData(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data", default=timezone.now) #será uma classe futuramente, não ha necessidade
-  patient_data = models.ForeignKey(Patient, verbose_name="Patient Data",  on_delete=models.CASCADE)
+  patient_data = models.ForeignKey(Patient, verbose_name="Patient ID",  on_delete=models.CASCADE)
   study = models.ForeignKey(Study, verbose_name="Study",  on_delete=models.CASCADE)
   ecg = models.BooleanField(verbose_name="ECG", default=False,  blank=True, null=True)
   ppg = models.BooleanField(verbose_name="PPG", default=False,  blank=True, null=True)
@@ -213,7 +212,7 @@ class CollectData(models.Model):
 
 class HRVTime(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data", default=timezone.now)
-  collectdata_time = models.OneToOneField(CollectData, verbose_name="Collect Data Time",on_delete=models.CASCADE)
+  collectdata_time = models.OneToOneField(CollectData, verbose_name="Collect Data ID",on_delete=models.CASCADE)
   nn_mean = models.FloatField(null=True, blank=True, verbose_name="NN Mean")
   nn_median = models.FloatField(null=True, blank=True, verbose_name="NN Median")
   nn_mode = models.FloatField(null=True, blank=True, verbose_name="NN Mode")
@@ -282,7 +281,7 @@ class HRVTime(models.Model):
 
 class HRVFreq(models.Model):
   collected_data = models.DateTimeField(verbose_name="Collected Data", default=timezone.now) #será uma classe futuramente, não ha necessida
-  collectdata_freq = models.OneToOneField(CollectData, verbose_name="Collect Data Frequence", on_delete=models.CASCADE)
+  collectdata_freq = models.OneToOneField(CollectData, verbose_name="Collect Data ID", on_delete=models.CASCADE)
   ulf_lomb_ms2 = models.FloatField(null=True, blank=True, verbose_name="Ultra Low Frequency Lomb (≤0.003 Hz)")
   vlf_lomb_ms2 = models.FloatField(null=True, blank=True, verbose_name="Very Low Frequency Lomb (0.0033–0.04 Hz)")
   lf_lomb_ms2 = models.FloatField(null=True, blank=True, verbose_name="Low Frequency Lomb (0.04–0.15 Hz)")
@@ -313,7 +312,7 @@ class HRVFreq(models.Model):
   numeric_fields = ['ulf_lomb_ms2', 'vlf_lomb_ms2', 'lf_lomb_ms2', 'hf_lomb_ms2', 'ulf_lomb_log', 'vlf_lomb_log', 'lf_lomb_log', 'hf_lomb_log', 'ttlpwr_lomb_ms2', 'lf_hf_lomb', 'power_vlf_lomb', 'power_lf_lomb', 'power_hf_lomb', 'lf_nu_lomb', 'hf_nu_lomb', 'ulf_welch', 'vlf_welch', 'lf_welch', 'hf_welch', 'ttlpwr_welch', 'lfhf_welch', 'power_vlf_welch', 'power_lf_welch', 'power_hf_welch', 'lf_nu_welch', 'hf_nu_welch']
   
   def __str__(self):
-    return "HRV Frequence ID: " +str(self.id)
+    return "HRV Frequency ID: " +str(self.id)
 
   
   def normalize_data(self, data):
@@ -357,7 +356,7 @@ class HRVFreq(models.Model):
 
 class HRVNonLinear(models.Model):
   collected_data = models.DateTimeField(default=timezone.now, verbose_name="Collected Data")
-  collectdata_non_lin = models.OneToOneField(        CollectData, on_delete=models.CASCADE, verbose_name="Collectdata Non_Lin")
+  collectdata_non_lin = models.OneToOneField(        CollectData, on_delete=models.CASCADE, verbose_name="Collect Data ID")
   sd1 = models.FloatField(blank=True, null=True, verbose_name="Standard Deviation Perpendicular")
   sd2 = models.FloatField(blank=True, null=True, verbose_name="Standard Deviation Along")
   sd1_sd2_ratio = models.FloatField(blank=True, null=True, verbose_name="SD_Perp SD_Along Ratio")

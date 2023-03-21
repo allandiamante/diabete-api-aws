@@ -23,7 +23,7 @@
     <tr>
         <th>Collect Data ID</th>
         <th>Patient ID</th>
-        <th>Patient Initials</th>
+        <th>Date of registration</th>
         <th>Options</th>
     </tr>
 
@@ -31,7 +31,7 @@
     <tr>
         <td>{{ collectdata.id }}</td>
         <td>{{ collectdata.patient_data.id }}</td>
-        <td>{{ collectdata.patient_data.initials }}</td>
+        <td>{{ collectdata.collected_data }}</td>
         <td>
             <a href="{% url 'ed-collectdata' collectdata.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
             <a href="{% url 'ex-collectdata' collectdata.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
@@ -39,7 +39,7 @@
     </tr>
     {% empty %}
     <tr>
-        <td colspan="4"> Empty fields</td>
+        <td colspan="4"> Collect Data not found</td>
     </tr>
     {% endfor %}
 

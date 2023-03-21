@@ -83,8 +83,8 @@
               </a>
             
               <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <a class="dropdown-item" href="{% url 'ls-condition' %}">List of condition</a>
-                <a class="dropdown-item " href="{% url 'condition' %}">Register condition</a>
+                <a class="dropdown-item" href="{% url 'ls-condition' %}">List of Condition</a>
+                <a class="dropdown-item " href="{% url 'condition' %}">Register Condition</a>
                 
               </div>
             </div>
@@ -167,9 +167,9 @@
             <span id="username">{{ request.user.username }}</span>
           </a>        
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/admin"><i class="fa fa-user"></i>My Account</a>
-          <a class="dropdown-item" href="/admin/password_change/"><i class="fa fa-lock"></i>Editing Password</a>
-          <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out"></i>Exit</a>
+          <a class="dropdown-item" href="/admin"><i class="fa fa-user"></i> My Account</a>
+          <a class="dropdown-item" href="/admin/password_change/"><i class="fa fa-lock"></i> Editing Password</a>
+          <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logoff</a>
         </li>    
         {% else %}
 

@@ -8,12 +8,12 @@
 
 {% block mid-content %}
 
-<h3>List of HRV Frequence</h3>
-<p class="lead">Here you will be able to edit and delete HRV Frequence</p>
-<a href="{% url 'hrvfreq' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a HRV Frequence</a>
+<h3>List of HRV Frequency</h3>
+<p class="lead">Here you will be able to edit and delete HRV Frequency</p>
+<a href="{% url 'hrvfreq' %}" class="btn btn-success btn-sm"><i class="fa fa-plus "></i> Register a HRV Frequency</a>
 <hr>
 <form action="?" method="GET">
-    <input type="text" name="id" id="" value="{{ request.GET.id }}" class="p-1 border" autocomplete="off" placeholder="HRV Frequence ID">
+    <input type="text" name="id" id="" value="{{ request.GET.id }}" class="p-1 border" autocomplete="off" placeholder="HRV Frequency ID">
     <button type="submit" class="btn btn-primary">Search</button>
     <a href="{% url 'ls-hrvfreq' %}" class="btn btn-light">Clean</a>
 </form>
@@ -21,9 +21,10 @@
 <div class="table-responsive">
 <table class="table table-striped">
     <tr>
-        <th>HRV Frequence ID</th>
+        <th>HRV Frequency ID</th>
+        <th>Patient ID</th>      
         <th>Collect Data ID </th>
-        <th>Patient Initials</th>
+        <th>Date of registration</th>
         <th>Options</th>
     </tr>
 
@@ -31,7 +32,8 @@
     <tr>
         <td>{{ hrvfreq.id }}</td>
         <td>{{ hrvfreq.collectdata_freq.id }}</td>
-        <td>{{ hrvfreq.collectdata_freq.patient_data.initials}}</td>
+        <td>{{ hrvfreq.collectdata_freq.patient_data.id }}</td>
+        <td>{{ hrvfreq.collected_data}}</td>
         <td>
             <a href="{% url 'ed-hrvfreq' hrvfreq.id %}" class="btn btn-warning btn-sm" title="Edit" ><i class="fa fa-edit "></i> Edit </a>
             <a href="{% url 'ex-hrvfreq' hrvfreq.id %}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash-can "></i> Delete </a>
@@ -39,7 +41,7 @@
     </tr>
     {% empty %}
     <tr>
-        <td colspan="4"> Empty fields</td>
+        <td colspan="4"> HRV Frequency not found</td>
     </tr>
     {% endfor %}
 

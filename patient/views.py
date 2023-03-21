@@ -16,7 +16,7 @@ class IndexView(TemplateView):
 
 
 
-############################ Create ############################
+############################ Create ###################
 
 class PatientCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
@@ -150,7 +150,7 @@ class HRVNonLinearCreate(LoginRequiredMixin, CreateView):
     ]
     success_url = reverse_lazy('ls-hrvnonlin')
    
-############################ UPDATE ############################
+############################ UPDATE #####################
 
 class PatientUpdate( LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
@@ -288,7 +288,7 @@ class HRVNonLinearUpdate(LoginRequiredMixin, UpdateView):
     ]
     success_url = reverse_lazy('ls-hrvnonlin')
 
-############################ DELETE ############################
+############################ DELETE ######################
 
 class PatientDelete( LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
