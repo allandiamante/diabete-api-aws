@@ -8,7 +8,7 @@
     <meta name="description" content="Gerenciador de pacientes com propensões a diabetes">
     <meta name="author" content="Allan D. de Souza">
     <meta name="generator" content="Hugo 0.108.0">
-    <title>Patient Mananger</title>
+    <title>Patient Manager</title>
 
     <link rel="stylesheet" type="text/css"  href="{% static 'css/bootstrap.min.css' %}" />
     <link rel="stylesheet" type="text/css"  href="{% static 'css/style.css' %}" />
@@ -188,26 +188,19 @@
   </nav>
 </header>
 {% endblock %}
-
-
 <main class="flex-shrink-0">
-  <!-- FORMS --><br>
-
-
+<br>
   <div class="container">
-
     {% block up-content %}
     <div class="row">
      
         <div class="col-8">
-          <h1 class="mt-5">Patient Mananger</h1>
+          <h1 class="mt-5">Patient Manager</h1>
           <p class="lead">Welcome to the Patient Management Application for those with a propensity for diabetes.
             This system was created as a requirement for the completion of the Bachelor of Computer Science
               degree program at the State University of Maringá. The student responsible for the project
               is Allan Diamante de Souza, under the guidance of Master Sandra Cossul and 
               co-guidance of Doctor Heloise M. P. Teixeira.
-
-          {% comment %} <h2 class="mt-5">Objective</h2> {% endcomment %}
           <p class="lead"> </p>          
         </div>
         <div class="col-4">
@@ -227,29 +220,14 @@
 {% block footer %}
 <footer class="footer mt-auto py-3 " style="background-color: #75b7e6e1;">
   <div class="container">
-
-    <!--foote_bottom_ul_amrc ends here-->
     <p class="text-center">Copyright @2023 | Designed With by <a href="#">Allan D. de Souza</a></p>
-    
-    <!-- <ul class="social_footer_ul">
-    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-    <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
-    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-    </ul> -->
-    <!--social_footer_ul ends here-->
     </div>
 </footer>
 {% endblock %}
-
-
-
-
 <script src="{% static 'js/bootstrap.bundle.min' %}" ></script>
 <script src="{% static 'js/jquery-min.js' %}"></script>
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-
 {% block scripts %}
 {% endblock%}
 

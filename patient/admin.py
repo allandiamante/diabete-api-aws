@@ -95,6 +95,7 @@ class HRVNonLinearAdmin(admin.ModelAdmin):
     list_display = ('id', 'collectdata_non_lin')
     search_fields = ('id',)
 
+# admin.site.register(admin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(Medicine, MedicinesAdmin )
 admin.site.register(ExamsResult, ExamsResultsAdmin)

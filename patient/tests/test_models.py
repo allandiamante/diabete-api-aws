@@ -3,93 +3,93 @@ from ..models import Patient, Medicine,  ExamsResult, Condition, CollectData, HR
 
 
 
-# class PatientTestCase(TestCase):    
-#     @classmethod
-#     def setUpTestData(cls):
-#         Patient.objects.create(
-#         collected_data= "2022-11-25",
-#         subject_name= "Estevan Caio da Silva",
-#         age= 22,
-#         gender= 1,
-#         weight= 70.0,
-#         height= 1.5,
-#         phone= "(44) 55555-5555",
-#         state= "PR",
-#         city= "Maringá",
-#         smoker= False,
-#         alcohol= False,
-#         physical_activity= 0,
-#         dm= False,
-#         type_dm= 0,
-#         age_dm_diagnosis= 0,
-#         dm_duration= 0,
-#         hipo_mes= 0,
-#         internacao_dm= False,
-#         sbp_repous= 0,
-#         dbp_repous= 0,
-#         sbp_empe= 0,
-#         dbp_empe= 0,
-#         sbp_change= 0,
-#         dbp_change= 0,
-#         postural_drop= False,
-#         mean_hr= 1,
-#         rr_resting= 0.0,
-#         rr_db= 0.0,
-#         rr_valsalva= 0.0,
-#         rr_standing= 0.0,
-#         obrienc_cs= 0,
-#         can_status= 0,
-#         brs_status= "Test Brs Status",            
-#         observations= "Test Observations"
-#     )
-
-#     def test_str_return_patient(self):
-#         p1 = Patient.objects.get( subject_name= "Estevan Caio da Silva")
-#         self.assertEquals(p1.__str__() ,"Patient ID: " + str(p1.id))
-
-class ExamsResultTestCase(TestCase):    
-
+class PatientTestCase(TestCase):    
     @classmethod
     def setUpTestData(cls):
-        p1 =  Patient.objects.create(
-            collected_data= "2022-11-25",subject_name= "Estevan Caio da Silva",age= 22,gender= 1,weight= 70.0,height= 1.5,phone= "(44) 55555-5555",state= "PR",city= "Maringá",smoker= False,
-            alcohol= False,physical_activity= 0,dm= False,type_dm= 0,age_dm_diagnosis= 0,dm_duration= 0,hipo_mes= 0,internacao_dm= False,sbp_repous= 0,dbp_repous= 0,sbp_empe= 0,dbp_empe= 0,
-            sbp_change= 0,dbp_change= 0,postural_drop= False,mean_hr= 1,rr_resting= 0.0,rr_db= 0.0,rr_valsalva= 0.0,rr_standing= 0.0,obrienc_cs= 0,can_status= 0,brs_status= "Test Brs Status",            
-            observations= "Test Observations"
-        )    
-        
-        ExamsResult.objects.create(
-            patient_exams = Patient.objects.filter(id=1).first(),
-            hba1c_percent = 3,
-            hba1c_mmol_mol = 3,
-            hb_g_dl = 3,
-            glicemia_mg_dl = 3,
-            glicemia_mmol_l = 3,
-            urine_albumina_mg_24h = 3,
-            microAlb = True,
-            creatina_mg_dl = 3,
-            creatina_umol_l = 3,
-            acr_alb_creat = 3,
-            rpc_prot_creat = 3,
-            clear_creatinina = 3,
-            ct_mg_dl = 3,
-            ct_mmol_l = 3,
-            hdl_mg_dl = 3,
-            ldl_mg_dl = 3,
-            vitb12 = 3,
-            vitd = 3,
-            tsh = 3,
-            tg_mg_dl = 3,
-            tg_mmol_l = 3,
-            na = 3,
-            basek = 3,
-            ureia = 3,
-            collected_data = "2023-03-06 17:29:46.000000"
-        )
+        Patient.objects.create(
+        collected_data= "2022-11-25",
+        subject_name= "Estevan Caio da Silva",
+        age= 22,
+        gender= 1,
+        weight= 70.0,
+        height= 1.5,
+        phone= "(44) 55555-5555",
+        state= "PR",
+        city= "Maringá",
+        smoker= False,
+        alcohol= False,
+        physical_activity= 0,
+        dm= False,
+        type_dm= 0,
+        age_dm_diagnosis= 0,
+        dm_duration= 0,
+        hipo_mes= 0,
+        internacao_dm= False,
+        sbp_repous= 0,
+        dbp_repous= 0,
+        sbp_empe= 0,
+        dbp_empe= 0,
+        sbp_change= 0,
+        dbp_change= 0,
+        postural_drop= False,
+        mean_hr= 1,
+        rr_resting= 0.0,
+        rr_db= 0.0,
+        rr_valsalva= 0.0,
+        rr_standing= 0.0,
+        obrienc_cs= 0,
+        can_status= 0,
+        brs_status= "Test Brs Status",            
+        observations= "Test Observations"
+    )
 
-    def test_str_return_examsresult(self):
-        er1 = ExamsResult.objects.get( id = 1 )
-        self.assertEquals(er1.__str__() ,"Exams Result ID: " + str(er1.id))
+    def test_str_return_patient(self):
+        p1 = Patient.objects.get( subject_name= "Estevan Caio da Silva")
+        self.assertEquals(p1.__str__() ,"Patient ID: " + str(p1.id))
+
+# class ExamsResultTestCase(TestCase):    
+
+#     @classmethod
+#     def setUpTestData(cls):
+#         p1 =  Patient.objects.create(
+#             collected_data= "2022-11-25",subject_name= "Estevan Caio da Silva",age= 22,gender= 1,weight= 70.0,height= 1.5,phone= "(44) 55555-5555",state= "PR",city= "Maringá",smoker= False,
+#             alcohol= False,physical_activity= 0,dm= False,type_dm= 0,age_dm_diagnosis= 0,dm_duration= 0,hipo_mes= 0,internacao_dm= False,sbp_repous= 0,dbp_repous= 0,sbp_empe= 0,dbp_empe= 0,
+#             sbp_change= 0,dbp_change= 0,postural_drop= False,mean_hr= 1,rr_resting= 0.0,rr_db= 0.0,rr_valsalva= 0.0,rr_standing= 0.0,obrienc_cs= 0,can_status= 0,brs_status= "Test Brs Status",            
+#             observations= "Test Observations"
+#         )    
+        
+#         ExamsResult.objects.create(
+#             patient_exams = Patient.objects.filter(id=1).first(),
+#             hba1c_percent = 3,
+#             hba1c_mmol_mol = 3,
+#             hb_g_dl = 3,
+#             glicemia_mg_dl = 3,
+#             glicemia_mmol_l = 3,
+#             urine_albumina_mg_24h = 3,
+#             microAlb = True,
+#             creatina_mg_dl = 3,
+#             creatina_umol_l = 3,
+#             acr_alb_creat = 3,
+#             rpc_prot_creat = 3,
+#             clear_creatinina = 3,
+#             ct_mg_dl = 3,
+#             ct_mmol_l = 3,
+#             hdl_mg_dl = 3,
+#             ldl_mg_dl = 3,
+#             vitb12 = 3,
+#             vitd = 3,
+#             tsh = 3,
+#             tg_mg_dl = 3,
+#             tg_mmol_l = 3,
+#             na = 3,
+#             basek = 3,
+#             ureia = 3,
+#             collected_data = "2023-03-06 17:29:46.000000"
+#         )
+
+#     def test_str_return_examsresult(self):
+#         er1 = ExamsResult.objects.get( id = 1 )
+#         self.assertEquals(er1.__str__() ,"Exams Result ID: " + str(er1.id))
 
 class MedicineTestCase(TestCase):   
 

@@ -155,7 +155,7 @@ class HRVNonLinearCreate(LoginRequiredMixin, CreateView):
 class PatientUpdate( LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Patient
-    title = 'ExamsResult'
+    title = 'Patient Update'
     template_name = 'ed-form.html'
     fields = ['collected_data', 'subject_name', 'age', 
             'gender', 'weight', 'height', 'phone',
@@ -189,16 +189,15 @@ class MedicineUpdate(LoginRequiredMixin, UpdateView):
 
     login_url = reverse_lazy('login')
     model = Medicine
-    title = 'ExamsResult'
+    title = 'Medicine'
     template_name = 'ed-form.html'
     fields = [  'collected_data', 'patient_medicines','insulin', 'ace_arb', 
     'sinvas_mg', 'atorvas_mg','rosuvas_mg', 'losartan_mg', 
     'enalapril_mg', 'quetiapina_mg','venlafaxina_mg',
         'omeprazol_mg', 'ranitidina_mg', 'carbamazpn_mg',
-        'anticoncepcional', 'aas_mg', 'lt4_mg',
-        'mtf_mg']
+        'anticoncepcional', 'aas_mg', 'lt4_mg', 'mtf_mg']
     success_url = reverse_lazy('ls-medicine')
-    sucess_message = 'New Medicine added sucessfully'
+    sucess_message = 'New Medicine updated sucessfully'
 
 class ExamsResultUpdate(LoginRequiredMixin, UpdateView):
 
@@ -220,7 +219,7 @@ class ConditionUpdate(LoginRequiredMixin, UpdateView):
 
     login_url = reverse_lazy('login')
     model = Condition
-    title = 'ExamsResult'
+    title = 'Condition Update'
     template_name = 'ed-form.html'
     fields = [ 'collected_data','patient_conditions','drge', 'vitiligo', 
     'doenca_celiaca', 'doenca_pulmonar','ace_arb', 'tireoide', 

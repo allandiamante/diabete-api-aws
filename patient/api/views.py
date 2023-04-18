@@ -55,7 +55,6 @@ class PatientsViewSet(viewsets.ModelViewSet):
         serializer = PatientsSerializer(new_patient)        
         return Response(serializer.data)
 
-
 tags_1= []
 tags_1.append('Medicine')
 @extend_schema(description ="End-Point with their respective HTTP methods for accessing patient medications", tags=tags_1,)
@@ -80,6 +79,26 @@ class MedicinesViewSet(viewsets.ModelViewSet):
         new_medicines.save() 
         serializer = MedicinesSerializer(new_medicines)
         return Response(serializer.data)
+
+    # def update(self, request, id=None):
+    #     data = request.data
+    #     medicines = Medicine.objects.filter(id=id)
+    #     medicines.collected_data=data["collected_data"],
+    #         medicines.patient_medicines=Patient.objects.get(pk=int(data["patient_medicines"])),
+    #          medicines.insulin=data['insulin'], medicines.ace_arb=data["ace_arb"], medicines.sinvas_mg=data["sinvas_mg"], medicines.atorvas_mg=data["atorvas_mg"],
+    #           medicines.rosuvas_mg=data["rosuvas_mg"], medicines.losartan_mg=data["losartan_mg"], medicines.enalapril_mg=data["enalapril_mg"],
+    #            medicines.quetiapina_mg=data["quetiapina_mg"], medicines.venlafaxina_mg=data["venlafaxina_mg"], medicines.omeprazol_mg=data["omeprazol_mg"],
+    #             medicines.ranitidina_mg=data["ranitidina_mg"], medicines.carbamazpn_mg=data["carbamazpn_mg"], medicines.anticoncepcional=data["anticoncepcional"],
+    #              medicines.aas_mg=data["aas_mg"], medicines.lt4_mg=data["lt4_mg"], medicines.mtf_mg=data["mtf_mg"]
+
+    #     medicines.save() 
+    #     serializer = MedicinesSerializer(medicines)
+    #     return Response(serializer.data)
+
+    def delete(self, request, id=None):
+        medicines = Medicine.objects.filter(id=id)
+        medicines.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 tags_1= []
 tags_1.append('Exams Result')
@@ -205,6 +224,7 @@ tags_1= []
 tags_1.append('HRV Frequency')
 @extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Frequency data associated with patient collected data.", tags=tags_1,)
 class HRVFreqViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated)
     serializer_class = HRVFreqSerializer
 
     def get_queryset(self):
