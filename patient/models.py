@@ -128,7 +128,6 @@ class Medicine(models.Model):
   observations = models.TextField(verbose_name="Observations", max_length=1000,  blank=True, null=True)
   
   def __str__(self):
-    #return "[Paciente ID: " + str(self.patient_medicines.id) + " | "  + "Medicamento ID: " +  str(self.id)+ "]"
     return "Medicine ID: " + str(self.id)
 
   def get_absolute_url(self):
@@ -182,7 +181,6 @@ class Condition(models.Model):
   pn_signs = models.CharField(verbose_name="PN Signs", max_length=200,  blank=True, null=True)
 
   def __str__(self):
-    #return "[Paciente ID: " + str(self.patient_conditions.id) + " | "  + "Condições ID: " + str(self.id)+ "]"
     return "Condition ID: " + str(self.id)
 
 class Study(models.Model):

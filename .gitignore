@@ -1,7 +1,8 @@
 .vscode
 *.sqlite
 *.pyc
-
+env
+.env
 Lib
 eb-virt
 # Elastic Beanstalk Files

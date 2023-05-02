@@ -17,7 +17,7 @@ from ..utils import ret_initials, calc_bmi, calc_raiz_q, calc_bsa, calc_sbp_dbp,
 
 tags_1= []
 tags_1.append('Patient')
-@extend_schema(description ="End-Point with their respective HTTP methods for accessing patient data.", tags=tags_1, summary="test sum")
+@extend_schema(description ="End-Point with their respective HTTP methods for accessing patient data.", tags=tags_1)
 class PatientsViewSet(viewsets.ModelViewSet):
     #permission_classes = (IsAuthenticated,)
 
@@ -180,7 +180,7 @@ tags_1= []
 tags_1.append('HRV Time')
 @extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Time data associated with patient collected data.", tags=tags_1,)
 class HRVTimeViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
     serializer_class = HRVTimeSerializer
 
     def get_queryset(self):
@@ -224,7 +224,7 @@ tags_1= []
 tags_1.append('HRV Frequency')
 @extend_schema(description ="End-Point with their respective HTTP methods for accessing HRV Frequency data associated with patient collected data.", tags=tags_1,)
 class HRVFreqViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated)
+    #permission_classes = (IsAuthenticated)
     serializer_class = HRVFreqSerializer
 
     def get_queryset(self):

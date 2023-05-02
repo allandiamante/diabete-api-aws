@@ -25,9 +25,13 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 
-
-
 ALLOWED_HOSTS = ['*']
+
+# ALLOWED_HOSTS = [    
+#     '127.0.0.1',
+#     'localhost',
+#     '.elasticbeanstalk.com',
+#     'myapi-env-1.eba-xtdwjz2c.sa-east-1.elasticbeanstalk.com']
 
 
 # Application definition
@@ -166,6 +170,7 @@ REST_AUTH_SERIALIZERS = {
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'LOCATION': 'C:/Users/Python/Desktop/MyApi',
     }
 }
 
