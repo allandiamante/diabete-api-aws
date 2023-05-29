@@ -57,8 +57,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
     #aplication
     'patient',
-    'django_cleanup.apps.CleanupConfig',
+    #login
     'usersmed.apps.UsersmedConfig',
+    'django_cleanup.apps.CleanupConfig',
     'userapp',
 
 ]
@@ -126,13 +127,6 @@ DATABASES = {
     }
 }
 
-
-#default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-
-#DATABASES = { 'default': config('DATABASE_URL', default=default_dburl, cast=dburl), }
-
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
