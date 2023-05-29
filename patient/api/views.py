@@ -19,6 +19,7 @@ tags_1= []
 tags_1.append('Patient')
 @extend_schema(description ="End-Point with their respective HTTP methods for accessing patient data.", tags=tags_1)
 class PatientsViewSet(viewsets.ModelViewSet):
+    #A seguir, função de autenticação via TOKEN:
     #permission_classes = (IsAuthenticated,)
 
 
